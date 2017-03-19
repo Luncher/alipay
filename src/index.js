@@ -8,7 +8,7 @@ import Parser from './parser'
 import { RESPONSE_MESSAGE, METHOD_TYPES } from './config'
 
 const Base64 = makeBase64()
-const debug = makeDebug('apipay-mobile')
+const debug = makeDebug('alipay-mobile')
 
 export default class Alipay {
   constructor(options = {}) {
