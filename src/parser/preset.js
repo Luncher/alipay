@@ -1,4 +1,5 @@
 import moment from 'moment'
+import config from './config'
 
 function createTimeStamp () {
   return moment().format('yyyy-MM-dd HH:mm:ss')
@@ -158,4 +159,19 @@ const QueryOrder = {
   }
 }
 
-export default { QueryOrder, CreateOrder, Basic, extendParams, payChannel }
+const VerifyPayment = {
+  memo: {
+    type: 'string',
+    required: true,
+  },
+  result: {
+    type: 'object',
+    required: true
+  },
+  resultStatus: {
+    type: 'enum',
+    enums: Object.keys(config.ALIPAY_PAYMENT_MESSAGE)
+  }
+}
+
+export default { VerifyPayment, QueryOrder, CreateOrder, Basic, extendParams, payChannel }

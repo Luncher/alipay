@@ -1,7 +1,6 @@
 import Preset from './preset'
 import Promise from 'bluebird'
-import * as methodTypes from './method-types'
-
+import { METHOD_TYPES } from '../config'
 
 class Runner {
   constructor (presets, params) {
@@ -106,13 +105,19 @@ export function parseAPIParams (method, params) {
   let instance
 
   switch (method) {
-    case methodTypes.CREATE_ORDER : {
+    case METHOD_TYPES.CREATE_ORDER : {
       instance = new Runner(Preset.CreateOrder, params)
       break
     }
-    case methodTypes.QUERY_ORDER : {
+    case METHOD_TYPES.QUERY_ORDER : {
       instance = new Runner(Preset.QueryOrder, params)    
       break; 
+    }
+    case METHOD_TYPES.VERIFY_PAYMENT: {
+      instance = new Runner(Preset.VerifyPayment, params)
+    }
+    default: {
+      throw new Error(`Parser Unknow method type:${method}`)
     }
   }
   return instance.run()  
