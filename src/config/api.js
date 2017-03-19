@@ -1,7 +1,7 @@
 export const RESPONSE_MESSAGE = {
-  '0': 'Success',
-  '1': 'Processing',
-  '-1': 'Error',
-  '-2': 'Permission Denied',
-  '-3': 'Sign Error'    
+  '0': 'success',
+  '1': 'processing',
+  '-1': 'error',
+  '-2': 'permission denied',
+  '-3': 'sign error'    
 }

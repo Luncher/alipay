@@ -1,5 +1,6 @@
 import fs from 'fs'
 import urllib from 'urllib'
+import crypto from 'crypto'
 import makeDebug from 'debug'
 import Promise from 'bluebird'
 import makeBase64 from 'js-base64'
@@ -7,8 +8,9 @@ import config from './config'
 import Parser from './parser'
 import { RESPONSE_MESSAGE, METHOD_TYPES } from './config'
 
-const Base64 = makeBase64()
-const debug = makeDebug('alipay-mobile')
+const Base64 = makeBase64.Base64
+const debug = makeDebug('alipay-mobile:index')
+const isPro = process.env.NODE_ENV === 'production'
 
 export default class Alipay {
   constructor(options = {}) {
@@ -25,20 +27,35 @@ export default class Alipay {
     if ( !fs.existsSync(this.pubKey)) {
       throw new Error("Not Found alipayPubKeyFile.")
     }
+    this.normalizePem()
     const omit = ['appPrivKeyFile', 'alipayPubKeyFile']
     this.options = Object.assign({}, Object.keys(options).reduce((acc, val, index) => {
-      omit.indexOf(val) === -1 && (acc[val] = options[val])
+      if (omit.indexOf(val) === -1) {
+        acc[val] = options[val]
+      }
+      return acc
     }, {}))
+    debug("origin options:", options)
+    debug("basic options:", this.options)
+  }
+
+  normalizePem () {
+    this.pubKey = fs.readFileSync(this.pubKey, 'utf-8')
+    this.privKey = "-----BEGIN RSA PRIVATE KEY-----\n" 
+      + fs.readFileSync(this.privKey, 'utf-8')
+      + "\n-----END RSA PRIVATE KEY-----"
   }
 
   makeSignStr (params, omit = ['sign']) {
-    return str = Object.keys(params)
+    return Object.keys(params)
       .sort()
       .filter(key => params[key] && omit.indexOf(key) === -1)
       .map(key => {
-        return key + '="' + params[key] + '"'
+        const value = typeof params[key] === 'object' ?
+          JSON.stringify(params[key]) : params[key]
+        return key + '=' + value + ''
       })
-      .join('&')
+      .join('&').trim()
   }
 
   signAlgorithm (signType) {
@@ -47,9 +64,10 @@ export default class Alipay {
 
   makeSign (params) {
     const signStr = this.makeSignStr(params)
-    const algorithm = this.signAlgorithm(params.sign_type)    
+    debug("signStr:", signStr)
+    const algorithm = this.signAlgorithm(params.sign_type)
     const signer = crypto.createSign(algorithm);
-    signer.update(str, params.charset)
+    signer.update(signStr, params.charset)
     return signer.sign(this.privKey, "base64")
   }
 
@@ -64,14 +82,15 @@ export default class Alipay {
 
   buildParams (method, options) {
     return Promise.all([
-      buildBasicParams(method, options),
-      buildAPIParams(method, options)
+      this.buildBasicParams(method, options),
+      this.buildAPIParams(method, options)
     ])
     .then(result => {
       return Object.assign({}, result[0], { biz_content: result[1] })
     })
     .then(params => {
       params.sign = this.makeSign(params)
+      debug("sign: ", params.sign)
       return params
     })
   }
@@ -125,7 +144,8 @@ export default class Alipay {
 
   makeRequest (params, options = {}) {
     const httpclient = urllib.create()
-    return httpclient.request(config.ALIPAY_GETWAY, Object.assign({}, {
+    const gatway = isPro ? config.ALIPAY_GETWAY : config.ALIPAY_DEV_GETWAY
+    return httpclient.request(gatway, Object.assign({}, {
       data: params,
       dataAsQueryString: true
     }, options))
@@ -133,8 +153,10 @@ export default class Alipay {
   }
 
   createOrder (options) {
+    let sign;
     return this.buildParams(METHOD_TYPES.CREATE_ORDER, options)
     .then(params => {
+      sign = params.sign
       return this.makeSignStr(params)
     })
     .then(signStr => {
@@ -142,6 +164,10 @@ export default class Alipay {
         const [key, value] = cur.split('=')
         return acc + key + '=' + encodeURIComponent(value) + '&'
       }, "").slice(0, -1)
+    })
+    .then(data => {
+      data = data + '&sign=' + encodeURIComponent(sign)
+      return { code: 0, message: RESPONSE_MESSAGE[0], data }
     })
   }
 
@@ -158,7 +184,7 @@ export default class Alipay {
   verifySign (response, charset = this.options.charset) {
     return Promise.resolve()
     .then(() => {
-      const isValid = true
+      let isValid = true
       const respType = this.responseType(response)
       if (!respType) {
         debug("Invalid Response Type")
@@ -244,8 +270,12 @@ export default class Alipay {
     })
   }
 
-  notifySucceed () {
+  notifySuccess () {
     return config.ALIPAY_NOTIFY_SUCCESS
+  }
+
+  notifyFailure () {
+    return config.ALIPAY_NOTIFY_FAILURE
   }
 
   makeNotifyResponse (params) {

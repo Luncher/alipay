@@ -1,8 +1,8 @@
 import moment from 'moment'
-import config from './config'
+import config from '../config'
 
 function createTimeStamp () {
-  return moment().format('yyyy-MM-dd HH:mm:ss')
+  return moment().format('YYYY-MM-DD HH:mm:ss')
 }
 
 const extendParams = {
@@ -89,7 +89,7 @@ function normalizeTotalAmount (value) {
 }
 
 function normalizePassbackParams (params) {
-  return encodeURI(params)
+  return params && encodeURI(params)
 }
 
 const CreateOrder = {

@@ -1,11 +1,13 @@
 import Preset from './preset'
+import makeDebug from 'debug'
 import Promise from 'bluebird'
 import { METHOD_TYPES } from '../config'
 
+const debug = makeDebug('alipay-mobile:parser')
+
 class Runner {
   constructor (presets, params) {
-    this.value    
-    this.result
+    this.result = {}
     this.invalid = false
     this.message = 'Success'
     this.params = params
@@ -17,12 +19,12 @@ class Runner {
   validateRequired (checker, key, data) {
     if (checker.required && !data && !checker.default) {
       this.invalid = true
-      this.message = `${key} required. But Not Found In params.`
+      this.message = `${key} is required. But Not Found In params.`
     }
   }
 
   validateEnum (checker, key, data) {
-    if (checker.type !== 'enum') return
+    if (checker.type !== 'enum' || !data) return
     const items = Array.isArray(data) ? data : data.split(',')
 
     for (let i = 0, len = items.length; i < len; i++) {
@@ -36,10 +38,11 @@ class Runner {
   }
 
   validateLength (checker, key, data) {
-    if ((key in params) && !data) {
+    if (!data) return
+    if ((key in this.params) && !data.length) {
       this.invalid = true
       this.message = `${key}. Length equal 0.`
-    } else if (data && checker.maxLength && data.length > checker.maxLength) {
+    } else if (checker.maxLength && data.length > checker.maxLength) {
       this.invalid = true
       this.message = `${key}. Too Long.`
     }
@@ -60,23 +63,33 @@ class Runner {
         data = checker.default
       }
     }
+    if (checker.normalize) {
+      data = checker.normalize(data)
+    }
+
     return data
   }
 
   validate (key) {
-    const data = this.params[key]
+    let data = this.params[key]
     const checker = this.presets[key]
+    debug("key: ", key)
+    debug("data: ", data)
+    debug("checker: ", checker)
 
     do {
       this.validateRequired(checker, key, data)
       if (this.invalid) break;
+      data = this.normalize(checker, key, data)
       this.validateEnum(checker, key, data)
       if (this.invalid) break;      
       this.validateLength(checker, key, data)
       if (this.invalid) break;      
       this.validateField(checker, key, data)
-      if (this.invalid) break;      
-      this.result[key] = this.normalize(checker, key, data)
+      if (this.invalid) break; 
+      if (data) {
+        this.result[key] = data
+      }     
     } while(0)
 
     return this.invalid
@@ -86,7 +99,7 @@ class Runner {
     return new Promise((resolve, reject) => {
       for (let i = 0, len = this.presetKeys.length; i < len; i++) {
         const key = this.presetKeys[i]
-        if (validate(key)) {
+        if (this.validate(key)) {
           reject(new Error(this.message))
           return;
         }
@@ -97,6 +110,7 @@ class Runner {
 }
 
 export function parseBasic (params) {
+  debug("params:", params)
   const instance = new Runner(Preset.Basic, params)
   return instance.run()
 }
