@@ -12,7 +12,7 @@ class Runner {
     this.message = 'Success'
     this.params = params
     this.presets = presets
-    this.paramsKeys = Object.keys(params)   
+    this.paramsKeys = Object.keys(params)
     this.presetKeys = Object.keys(presets)  
   }
 
@@ -129,6 +129,11 @@ export function parseAPIParams (method, params) {
     }
     case METHOD_TYPES.VERIFY_PAYMENT: {
       instance = new Runner(Preset.VerifyPayment, params)
+      break;       
+    }
+    case METHOD_TYPES.NOTIFY_RESPONSE: {
+      instance = new Runner(Preset.NotifyResponse, params)
+      break;      
     }
     default: {
       throw new Error(`Parser Unknow method type:${method}`)

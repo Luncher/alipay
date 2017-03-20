@@ -38,4 +38,18 @@ describe('ALIPAY unit test', function () {
       assert(result.data.sub_msg, '交易不存在')
     })
   })
+  it ('should reject makeNotifyResponse', () => {
+    return service.makeNotifyResponse({})
+    .then(result => {
+      console.dir(result)
+      assert(result.code == -1, result.message)
+    })
+  })
+
+  // it ('should reject makeNotifyResponse', () => {
+  //   return service.makeNotifyResponse()
+  //   .then(result => {
+  //     assert(result.code == -1, result.message)
+  //   })
+  // })
 })
