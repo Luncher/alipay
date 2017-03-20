@@ -35,7 +35,7 @@ describe('ALIPAY unit test', function () {
     .then(result => {
       assert(result.code == -1, result.message)
       assert(result.data.code == '40004')
-      assert(result.data.sub_msg, '交易不存在')
+      assert(result.data.sub_msg === '交易不存在')
     })
   })
   it ('should reject makeNotifyResponse', () => {

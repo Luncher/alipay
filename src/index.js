@@ -21,13 +21,6 @@ export default class Alipay {
     if (!this.privKey || !this.publicKey) {
       throw new Error('Invalid appPrivKeyFile or alipayPubKeyFile')
     }
-
-    if ( !fs.existsSync(this.privKey)) {
-      throw new Error("Not Found appPrivKeyFile.")
-    }
-    if ( !fs.existsSync(this.publicKey)) {
-      throw new Error("Not Found alipayPubKeyFile.")
-    }
     this.normalizePem()
     const omit = ['appPrivKeyFile', 'alipayPubKeyFile']
     this.options = Object.assign({}, Object.keys(options).reduce((acc, val, index) => {
@@ -39,12 +32,14 @@ export default class Alipay {
   }
 
   normalizePem () {
-    this.publicKey = "-----BEGIN PUBLIC KEY-----\n"
-      + fs.readFileSync(this.publicKey, 'utf-8')
-      + "\n-----END PUBLIC KEY-----"
-    this.privKey = "-----BEGIN RSA PRIVATE KEY-----\n" 
-      + fs.readFileSync(this.privKey, 'utf-8')
-      + "\n-----END RSA PRIVATE KEY-----"
+    if (this.publicKey.indexOf('BEGIN PUBLIC KEY') === -1) {
+      this.publicKey = "-----BEGIN PUBLIC KEY-----\n" + this.publicKey
+        + "\n-----END PUBLIC KEY-----"
+    }
+    if (this.privKey.indexOf('BEGIN RSA PRIVATE KEY') === -1) {
+      this.privKey = "-----BEGIN RSA PRIVATE KEY-----\n" + this.privKey
+        + "\n-----END RSA PRIVATE KEY-----"
+    }
   }
 
   buildBasicParams (method, options) {
@@ -156,18 +151,11 @@ export default class Alipay {
   }
 
   // sync query order status
-  queryOrder (outTradeNo, tradeNo) {
+  queryOrder (params) {
     return Promise.resolve()
     .then(() => {
-      if (!outTradeNo && !tradeNo) {
+      if (!params.out_trade_no && !params.trade_no) {
         throw new Error("outTradeNo and tradeNo can not both omit.")
-      }
-      const params = {}
-      if (outTradeNo) {
-        params.out_trade_no = outTradeNo
-      }
-      if (tradeNo) {
-        params.trade_no = tradeNo
       }
       return this.buildParams(METHOD_TYPES.QUERY_ORDER, params)
       .then(params => {

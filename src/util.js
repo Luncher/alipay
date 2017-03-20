@@ -7,7 +7,7 @@ export function makeSignStr(params, omit = ['sign']) {
   .filter(key => params[key] && omit.indexOf(key) === -1)
   .map(key => {
     const value = typeof params[key] === 'object' ?
-      JSON.stringify(params[key]) : params[key]
+      JSON.stringify(params[key])  : params[key]
     return key + '=' + value + ''
   })
   .join('&').trim()
