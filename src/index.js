@@ -35,12 +35,12 @@ export default class Alipay {
       }
       return acc
     }, {}))
-    debug("origin options:", options)
-    debug("basic options:", this.options)
   }
 
   normalizePem () {
-    this.pubKey = fs.readFileSync(this.pubKey, 'utf-8')
+    this.pubKey = "-----BEGIN PUBLIC KEY-----\n"
+      + fs.readFileSync(this.pubKey, 'utf-8')
+      + "\n-----END PUBLIC KEY-----"
     this.privKey = "-----BEGIN RSA PRIVATE KEY-----\n" 
       + fs.readFileSync(this.privKey, 'utf-8')
       + "\n-----END RSA PRIVATE KEY-----"
@@ -64,7 +64,6 @@ export default class Alipay {
 
   makeSign (params) {
     const signStr = this.makeSignStr(params)
-    debug("signStr:", signStr)
     const algorithm = this.signAlgorithm(params.sign_type)
     const signer = crypto.createSign(algorithm);
     signer.update(signStr, params.charset)
@@ -86,11 +85,10 @@ export default class Alipay {
       this.buildAPIParams(method, options)
     ])
     .then(result => {
-      return Object.assign({}, result[0], { biz_content: result[1] })
+      return Object.assign({}, result[0], { biz_content: JSON.stringify(result[1]) })
     })
     .then(params => {
       params.sign = this.makeSign(params)
-      debug("sign: ", params.sign)
       return params
     })
   }
@@ -112,30 +110,26 @@ export default class Alipay {
   parseResponse (response) {
     const metafields = [ 'code', 'msg', 'sub_code', 'sub_msg', 'sign' ]
     const result = Object.keys(response).reduce((acc, cur) => {
-      const field = metafields.indexOf(cur) !== -1 ? 'metadata' : 'data'
-      acc[field] = response[cur]
+      if (response[cur]) {
+        const field = metafields.indexOf(cur) !== -1 ? 'metadata' : 'data'
+        acc[field] = response[cur]
+      }
+      return acc
     }, { metadata: {}, data: {} })
     return JSON.parse(JSON.stringify(result))
   }
 
   makeResponse (response) {
     return Promise.resolve()
-    .then(() => {
-      return this.verifySign(response)
-    })
     .then((valid) => {
       const result = this.parseResponse(response)
       const { metadata, data } = result;
-      if (!valid) {
-        result.code = '-3'
+      if (this.isSucceed(result.metadata)) {
+        result.code = '0'
+      } else if (this.isPermissionDenied(result.metadata)) {
+        result.code = '-2'
       } else {
-        if (this.isSucceed(result.metadata)) {
-          result.code = '0'
-        } else if (this.isPermissionDenied(result.metadata)) {
-          result.code = '-2'
-        } else {
-          result.code = '-1'
-        }
+        result.code = '-1'
       }
       result.message = RESPONSE_MESSAGE[result.code]
       return result
@@ -147,28 +141,10 @@ export default class Alipay {
     const gatway = isPro ? config.ALIPAY_GETWAY : config.ALIPAY_DEV_GETWAY
     return httpclient.request(gatway, Object.assign({}, {
       data: params,
+      dataType: 'json',      
       dataAsQueryString: true
     }, options))
-    .then(result => this.makeResponse(result))
-  }
-
-  createOrder (options) {
-    let sign;
-    return this.buildParams(METHOD_TYPES.CREATE_ORDER, options)
-    .then(params => {
-      sign = params.sign
-      return this.makeSignStr(params)
-    })
-    .then(signStr => {
-      return signStr.split('&').reduce((acc, cur) => {
-        const [key, value] = cur.split('=')
-        return acc + key + '=' + encodeURIComponent(value) + '&'
-      }, "").slice(0, -1)
-    })
-    .then(data => {
-      data = data + '&sign=' + encodeURIComponent(sign)
-      return { code: 0, message: RESPONSE_MESSAGE[0], data }
-    })
+    .then(resp => this.makeResponse(resp.data))
   }
 
   responseType (response) {
@@ -181,22 +157,27 @@ export default class Alipay {
   // xxx_response
   // sign
   // sign_type
-  verifySign (response, charset = this.options.charset) {
+  verifySign (response, params) {
     return Promise.resolve()
     .then(() => {
       let isValid = true
-      const respType = this.responseType(response)
+      let respType = this.responseType(response)
       if (!respType) {
-        debug("Invalid Response Type")
         isValid = false
       }
-      else {
+      else if (!response.sign) {
+        isValid = false
+      } else {
+        respType += '_response'
         const sign = response.sign
-        const resp = response[respType] 
-        const algorithm = this.signAlgorithm(response.sign_type)
+        let resp = response[respType]
+        if (typeof resp === 'object') {
+          resp = this.makeSignStr(resp)
+        }
+        const algorithm = this.signAlgorithm(params.sign_type)
         const verify = crypto.createVerify(algorithm)
-        verify.update(resp, charset)
-        isValid = !!(verify.verify(this.pubKey, sign, 'base64'))
+        verify.update(resp, params.charset)
+        let ret = verify.verify(this.pubKey, sign, 'base64')
       }
 
       return isValid
@@ -244,6 +225,25 @@ export default class Alipay {
     })
   }
 
+  createOrder (options) {
+    let sign;
+    return this.buildParams(METHOD_TYPES.CREATE_ORDER, options)
+    .then(params => {
+      sign = params.sign
+      return this.makeSignStr(params)
+    })
+    .then(signStr => {
+      return signStr.split('&').reduce((acc, cur) => {
+        const [key, value] = cur.split('=')
+        return acc + key + '=' + encodeURIComponent(value) + '&'
+      }, "").slice(0, -1)
+    })
+    .then(data => {
+      data = data + '&sign=' + encodeURIComponent(sign)
+      return { code: 0, message: RESPONSE_MESSAGE[0], data }
+    })
+  }
+
   // sync query order status
   queryOrder (outTradeNo, tradeNo) {
     return Promise.resolve()
@@ -251,7 +251,13 @@ export default class Alipay {
       if (!outTradeNo && !tradeNo) {
         throw new Error("outTradeNo and tradeNo can not both omit.")
       }
-      const params = { out_trade_no: outTradeNo, trade_no: tradeNo }
+      const params = {}
+      if (outTradeNo) {
+        params.out_trade_no = outTradeNo
+      }
+      if (tradeNo) {
+        params.trade_no = tradeNo
+      }
       return this.buildParams(METHOD_TYPES.QUERY_ORDER, params)
       .then(params => {
         return this.makeRequest(params)

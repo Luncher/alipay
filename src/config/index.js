@@ -2,7 +2,7 @@ export { RESPONSE_MESSAGE } from './api'
 export { METHOD_TYPES } from './method-types'
 
 export default {
-  ALIPAY_DEV_GETWAY: 'https://openapi.devalipay.com/gateway.do',
+  ALIPAY_DEV_GETWAY: 'https://openapi.alipaydev.com/gateway.do',
   ALIPAY_GETWAY: 'https://openapi.alipay.com/gateway.do',
   ALIPAY_PAYMENT_MESSAGE: {
     9000: '订单支付成功',

@@ -2,7 +2,7 @@ import moment from 'moment'
 import config from '../config'
 
 function createTimeStamp () {
-  return moment().format('YYYY-MM-DD HH:mm:ss')
+  return '2017-03-20 10:28:59'//moment().format('YYYY-MM-DD HH:mm:ss')
 }
 
 const extendParams = {
