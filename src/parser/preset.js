@@ -79,7 +79,6 @@ const Basic = {
   },
   notify_url: {
     type: 'string',
-    required: true,
     maxLength: 256
   }
 }
