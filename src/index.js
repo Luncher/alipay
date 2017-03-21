@@ -72,28 +72,17 @@ export default class Alipay {
     const isPermissionDenied = response => {
       return ['40006'].indexOf(response.code) !== -1    
     }
-    const parseResponse = response => {
-      const metafields = [ 'code', 'msg', 'sub_code', 'sub_msg', 'sign' ]
-      const result = Object.keys(response).reduce((acc, cur) => {
-        if (response[cur]) {
-          const field = metafields.indexOf(cur) !== -1 ? 'metadata' : 'data'
-          acc[field] = response[cur]
-        }
-        return acc
-      }, { metadata: {}, data: {} })
-      return JSON.parse(JSON.stringify(result))
-    }
-
-    const result = parseResponse(response)
-    const { metadata, data } = result;
-
-    if (isSucceed(result.metadata)) {
+    const result = {}    
+    const respType = util.responseType(response)
+    const respData = response[respType]
+    if (isSucceed(respData)) {
       result.code = '0'
-    } else if (isPermissionDenied(result.metadata)) {
+    } else if (isPermissionDenied(respData)) {
       result.code = '-2'
     } else {
       result.code = '-1'
     }
+    result.data = response
     result.message = RESPONSE_MESSAGE[result.code]
 
     return result

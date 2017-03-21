@@ -2,7 +2,7 @@ import moment from 'moment'
 import config from '../config'
 
 function createTimeStamp () {
-  return '2017-03-20 10:28:59'//moment().format('YYYY-MM-DD HH:mm:ss')
+  return moment().format('YYYY-MM-DD HH:mm:ss')
 }
 
 const extendParams = {
@@ -84,7 +84,7 @@ const Basic = {
 }
 
 function normalizeTotalAmount (value) {
-  return Number('1.234').toFixed(2)
+  return Number(value).toFixed(2)
 }
 
 function normalizePassbackParams (params) {
