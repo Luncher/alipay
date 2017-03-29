@@ -1,11 +1,11 @@
 import Preset from './preset'
 import makeDebug from 'debug'
 import Promise from 'bluebird'
-import { METHOD_TYPES } from '../config'
+import { METHOD_TYPES } from '~/config'
 
 const debug = makeDebug('alipay-mobile:parser')
 
-class Runner {
+class Validator {
   constructor (presets, params) {
     this.result = {}
     this.invalid = false
@@ -109,31 +109,59 @@ class Runner {
   }
 }
 
-export function parseBasic (params) {
+export function validateBasicParams (params) {
   debug("params:", params)
-  const instance = new Runner(Preset.Basic, params)
+  const instance = new Validator(Preset.Basic, params)
   return instance.run()
 }
 
-export function parseAPIParams (method, params) {
+export function validateAPIParams (method, params) {
   let instance
 
   switch (method) {
     case METHOD_TYPES.CREATE_ORDER : {
-      instance = new Runner(Preset.CreateOrder, params)
+      instance = new Validator(Preset.CreateOrder, params)
       break
     }
     case METHOD_TYPES.QUERY_ORDER : {
-      instance = new Runner(Preset.QueryOrder, params)    
-      break; 
+      instance = new Validator(Preset.QueryOrder, params)    
+      break
+    }
+    case METHOD_TYPES.CANCEL_ORDER: {
+      instance = new Validator(Preset.CancelOrder, params)
+      break
     }
     case METHOD_TYPES.VERIFY_PAYMENT: {
-      instance = new Runner(Preset.VerifyPayment, params)
-      break;       
+      instance = new Validator(Preset.VerifyPayment, params)
+      break       
     }
     case METHOD_TYPES.NOTIFY_RESPONSE: {
-      instance = new Runner(Preset.NotifyResponse, params)
-      break;      
+      instance = new Validator(Preset.Notify, params)
+      break   
+    }
+    case METHOD_TYPES.TRADE_CLOSE: {
+      instance = new Validator(Preset.TradeClose, params)
+      break
+    }
+    case METHOD_TYPES.TRADE_REFUND: {
+      instance = new Validator(Preset.TradeRefund, params)
+      break
+    }
+    case METHOD_TYPES.TRADE_REFUND_QUERY: {
+      instance = new Validator(Preset.TradeRefundQuery, params)
+      break
+    }
+    case METHOD_TYPES.BILL_DOWNLOAD_QUERY: {
+      instance = new Validator(Preset.BillDownloadQuery, params)
+      break
+    }
+    case METHOD_TYPES.TRADE_PRECREATE: {
+      instance = new Validator(Preset.TradePrecreate, params)
+      break
+    }
+    case METHOD_TYPES.TRADE_SETTLE: {
+      instance = new Validator(Preset.TradeSettle, params)
+      break
     }
     default: {
       throw new Error(`Parser Unknow method type:${method}`)
@@ -142,4 +170,7 @@ export function parseAPIParams (method, params) {
   return instance.run()  
 }
 
-export default { parseBasic, parseAPIParams }
+export default {
+  validateAPIParams,
+  validateBasicParams  
+}

@@ -1,6 +1,27 @@
-const QUERY_ORDER = 'alipay.trade.query'
-const CREATE_ORDER = 'alipay.trade.app.pay'
-const VERIFY_PAYMENT = 'verify.payment.status' //self define
-const NOTIFY_RESPONSE = 'notify.response' //self define
+export const QUERY_ORDER = 'alipay.trade.query'
+export const CREATE_ORDER = 'alipay.trade.app.pay'
+export const TRADE_CLOSE = 'alipay.trade.close'
+export const CANCEL_ORDER = 'alipay.trade.cancel'
+export const TRADE_REFUND = 'alipay.trade.refund'
+export const TRADE_SETTLE = 'alipay.trade.order.settle'
+export const TRADE_PRECREATE = 'alipay.trade.precreate'
+export const TRADE_REFUND_QUERY = 'alipay.trade.fastpay.refund.query'
+export const BILL_DOWNLOAD_QUERY = 'alipay.data.dataservice.bill.downloadurl.query'
 
-export const METHOD_TYPES = { QUERY_ORDER, CREATE_ORDER, VERIFY_PAYMENT }
+export const VERIFY_PAYMENT = 'verify.payment.status' //self define
+export const NOTIFY_RESPONSE = 'notify.response' //self define
+
+export const METHOD_TYPES = {
+  QUERY_ORDER,
+  CREATE_ORDER,
+  CANCEL_ORDER,
+  TRADE_CLOSE,
+  TRADE_SETTLE,
+  TRADE_REFUND,
+  TRADE_PRECREATE,
+  TRADE_REFUND_QUERY,
+  BILL_DOWNLOAD_QUERY,
+
+  VERIFY_PAYMENT,
+  NOTIFY_RESPONSE
+}
