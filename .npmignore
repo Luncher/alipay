@@ -1,3 +1,6 @@
 src/**
 test/**
+boqii-test/**
+.babelrc
+.eslint*
 debug.js
