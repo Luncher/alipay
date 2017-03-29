@@ -30,4 +30,4 @@
 
 ## LICENSE
 
-  `MIT`
+  [MIT](https://mit-license.org/)
