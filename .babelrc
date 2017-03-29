@@ -1,7 +1,12 @@
 {
-  "presets": ["es2015"],
+  "presets": [
+    "es2015", 
+    "babel-preset-power-assert"
+  ],
   "plugins": [
-    "babel-root-import"
+    ["babel-plugin-root-import", {
+      "rootPathSuffix": "src/"
+    }]
   ],
   "retainLines": true,
   "sourceMaps": true
