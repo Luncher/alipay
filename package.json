@@ -6,7 +6,7 @@
   "scripts": {
     "compile": "babel src -d lib",
     "prepublish": "npm run compile",
-    "test": "cross-env DEBUG=alipay-mobile:index NODE_ENV=production mocha test/ --recursive --compilers js:babel-register"
+    "test": "cross-env DEBUG=alipay-mobile:index NODE_ENV=development mocha test/ --recursive --compilers js:babel-register"
   },
   "keywords": [
     "alipay",
