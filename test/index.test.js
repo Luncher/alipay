@@ -1,7 +1,7 @@
 import fs from 'fs'
 import path from 'path'
 import assert from 'assert'
-import Alipay from '../src/index'
+import Alipay from '~/index'
 
 const read = filename => {
   return fs.readFileSync(path.resolve(__dirname, filename))
