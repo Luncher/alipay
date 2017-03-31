@@ -9,7 +9,7 @@
 [npm-url]: https://www.npmjs.com/package/alipay-mobile
 [npm-image]: https://img.shields.io/npm/v/alipay-mobile.svg?style=flat
 [download-url]: https://www.npmjs.com/package/alipay-mobile
-[download-image]: https://img.shields.io/npm/dm/localeval.svg?style=flat
+[download-image]: https://img.shields.io/npm/dm/alipay-mobile.svg?style=flat
 [david-url]: https://david-dm.org/Luncher/alipay-mobile
 [david-image]: https://david-dm.org/Luncher/alipay-mobile.svg?style=flat
 [travis-url]: https://travis-ci.org/Luncher/alipay-mobile
