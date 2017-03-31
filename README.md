@@ -3,11 +3,15 @@
 [![NPM version][npm-image]][npm-url]
 [![Build Status][travis-image]][travis-url]
 [![Codecov Status][codecov-image]][codecov-url]
-[![NPM download][download-image]][npm-url]
+[![David Status][david-image]][david-url]
+[![NPM download][download-image]][download-url]
 
 [npm-url]: https://www.npmjs.com/package/alipay-mobile
 [npm-image]: https://img.shields.io/npm/v/alipay-mobile.svg?style=flat
+[download-url]: https://www.npmjs.com/package/alipay-mobile
 [download-image]: https://img.shields.io/npm/dm/localeval.svg?style=flat
+[david-url]: https://david-dm.org/Luncher/alipay-mobile
+[david-image]: https://david-dm.org/Luncher/alipay-mobile.svg?style=flat
 [travis-url]: https://travis-ci.org/Luncher/alipay-mobile
 [travis-image]: https://travis-ci.org/Luncher/alipay-mobile.svg?style=flat
 [codecov-url]: https://codecov.io/gh/Luncher/alipay-mobile
