@@ -1,13 +1,20 @@
 {
+  "env": {
+    "test": {
+      "presets": [
+        "babel-preset-power-assert"
+      ],
+      "plugins": [
+        ["istanbul"]
+      ]
+    }
+  },
   "presets": [
-    "es2015", 
-    "babel-preset-power-assert"
+    "es2015"
   ],
   "plugins": [
     ["babel-plugin-root-import", {
       "rootPathSuffix": "src/"
     }]
-  ],
-  "retainLines": true,
-  "sourceMaps": true
+  ]
 }
