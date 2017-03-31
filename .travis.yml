@@ -10,6 +10,7 @@ cache:
 
 after_script:
   - npm run cov
+  - codecov
 
 script:
   - npm run test
