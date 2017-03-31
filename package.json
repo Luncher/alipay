@@ -9,6 +9,16 @@
     "cov": "cross-env NODE_ENV=test nyc --reporter=lcovonly mocha test/*.js --timeout 15000 --recursive --compilers js:babel-register",
     "test": "cross-env DEBUG=alipay-mobile:index NODE_ENV=test mocha test/*.js --timeout 15000 --recursive --compilers js:babel-register"
   },
+  "nyc": {
+    "include": [
+      "src/*.js"
+    ],
+    "require": [
+      "babel-register"
+    ],
+    "sourceMap": false,
+    "instrument": false
+  },
   "keywords": [
     "alipay",
     "mobile"
