@@ -8,7 +8,7 @@ cache:
   directories:
     node_modules
 
-after_script
+after_script:
   - npm run cov
 
 script:
