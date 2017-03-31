@@ -13,7 +13,7 @@
 [david-url]: https://david-dm.org/Luncher/alipay-mobile
 [david-image]: https://david-dm.org/Luncher/alipay-mobile.svg?style=flat-square
 [travis-url]: https://travis-ci.org/Luncher/alipay-mobile
-[travis-image]: https://travis-ci.org/Luncher/alipay-mobile.svg?style=flat-square
+[travis-image]: https://img.shields.io/travis/Luncher/alipay-mobile.svg?style=flat-square
 [codecov-url]: https://codecov.io/gh/Luncher/alipay-mobile
 [codecov-image]: https://img.shields.io/codecov/c/github/Luncher/alipay-mobile.svg?style=flat-square
 
