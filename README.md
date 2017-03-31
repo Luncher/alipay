@@ -1,5 +1,13 @@
 # alipay-mobile
 
+[![NPM version][npm-image]][npm-url]
+[![Build Status][travis-image]][travis-url]
+
+[npm-url]: https://img.shields.io/npm/v/alipay-mobile
+[npm-image]: https://img.shields.io/npm/v/alipay-mobile.svg?style=flat
+[travis-url]: https://travis-ci.org/Luncher/alipay-mobile
+[travis-image]: https://travis-ci.org/Luncher/alipay-mobile.svg?style=flat
+
 [蚂蚁金服开放平台](https://openhome.alipay.com/platform/home.htm)`Node.js` SDK。
 
 ---
