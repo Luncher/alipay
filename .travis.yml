@@ -8,9 +8,8 @@ cache:
   directories:
     node_modules
 
-install:
-  - npm install -g codecov
+after_script
+  - npm run cov
 
 script:
   - npm run test
-  - npm run cov
