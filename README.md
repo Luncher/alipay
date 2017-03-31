@@ -9,7 +9,7 @@
 [travis-url]: https://travis-ci.org/Luncher/alipay-mobile
 [travis-image]: https://travis-ci.org/Luncher/alipay-mobile.svg?style=flat
 [codecov-url]: https://codecov.io/gh/Luncher/alipay-mobile
-[codecov-image]: https://codecov.io/gh/Luncher/alipay-mobile/branch/master/graph/badge.svg
+[codecov-image]: https://img.shields.io/codecov/c/github/Luncher/alipay-mobile.svg?style=flat
 
 
 [蚂蚁金服开放平台](https://openhome.alipay.com/platform/home.htm)`Node.js` SDK。
