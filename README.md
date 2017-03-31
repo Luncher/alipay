@@ -7,15 +7,15 @@
 [![NPM download][download-image]][download-url]
 
 [npm-url]: https://www.npmjs.com/package/alipay-mobile
-[npm-image]: https://img.shields.io/npm/v/alipay-mobile.svg?style=flat
+[npm-image]: https://img.shields.io/npm/v/alipay-mobile.svg?style=flat-square
 [download-url]: https://www.npmjs.com/package/alipay-mobile
-[download-image]: https://img.shields.io/npm/dm/alipay-mobile.svg?style=flat
+[download-image]: https://img.shields.io/npm/dm/alipay-mobile.svg?style=flat-square
 [david-url]: https://david-dm.org/Luncher/alipay-mobile
-[david-image]: https://david-dm.org/Luncher/alipay-mobile.svg?style=flat
+[david-image]: https://david-dm.org/Luncher/alipay-mobile.svg?style=flat-square
 [travis-url]: https://travis-ci.org/Luncher/alipay-mobile
-[travis-image]: https://travis-ci.org/Luncher/alipay-mobile.svg?style=flat
+[travis-image]: https://travis-ci.org/Luncher/alipay-mobile.svg?style=flat-square
 [codecov-url]: https://codecov.io/gh/Luncher/alipay-mobile
-[codecov-image]: https://img.shields.io/codecov/c/github/Luncher/alipay-mobile.svg?style=flat
+[codecov-image]: https://img.shields.io/codecov/c/github/Luncher/alipay-mobile.svg?style=flat-square
 
 
 [蚂蚁金服开放平台](https://openhome.alipay.com/platform/home.htm)`Node.js` SDK。
