@@ -2,11 +2,15 @@
 
 [![NPM version][npm-image]][npm-url]
 [![Build Status][travis-image]][travis-url]
+[![Codecov Status][codecov-image]][codecov-url]
 
 [npm-url]: https://www.npmjs.com/package/alipay-mobile
 [npm-image]: https://img.shields.io/npm/v/alipay-mobile.svg?style=flat
 [travis-url]: https://travis-ci.org/Luncher/alipay-mobile
 [travis-image]: https://travis-ci.org/Luncher/alipay-mobile.svg?style=flat
+[codecov-url]: https://codecov.io/gh/Luncher/alipay-mobile
+[codecov-image]: https://codecov.io/gh/Luncher/alipay-mobile/branch/master/graph/badge.svg
+
 
 [蚂蚁金服开放平台](https://openhome.alipay.com/platform/home.htm)`Node.js` SDK。
 
