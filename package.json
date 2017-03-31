@@ -1,6 +1,6 @@
 {
   "name": "alipay-mobile",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "",
   "main": "lib/index.js",
   "scripts": {
@@ -12,6 +12,10 @@
     "alipay",
     "mobile"
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Luncher/alipay-mobile"
+  },
   "author": {
     "name": "linchen",
     "email": "gakiclin@gmail.com",
