@@ -3,9 +3,11 @@
 [![NPM version][npm-image]][npm-url]
 [![Build Status][travis-image]][travis-url]
 [![Codecov Status][codecov-image]][codecov-url]
+[![NPM download][download-image]][npm-url]
 
 [npm-url]: https://www.npmjs.com/package/alipay-mobile
 [npm-image]: https://img.shields.io/npm/v/alipay-mobile.svg?style=flat
+[download-image]: https://img.shields.io/npm/dm/localeval.svg?style=flat
 [travis-url]: https://travis-ci.org/Luncher/alipay-mobile
 [travis-image]: https://travis-ci.org/Luncher/alipay-mobile.svg?style=flat
 [codecov-url]: https://codecov.io/gh/Luncher/alipay-mobile
