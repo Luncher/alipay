@@ -16,4 +16,5 @@ after_script:
   - codecov
 
 script:
+  - npm run lint
   - npm run test
