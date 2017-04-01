@@ -40,10 +40,10 @@ export default {
   out_biz_no: {
     type: 'string'    
   },
-    buyer_id: {
+  buyer_id: {
     type: 'string'    
   },
-    buyer_logon_id: {
+  buyer_logon_id: {
     type: 'string'    
   },
   seller_id: {

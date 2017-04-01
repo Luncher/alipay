@@ -1,6 +1,5 @@
 'use strict'
 
-import config from '../config'
 import * as utils from './utils'
 import Notify from './module/notify'
 import TradeClose from './module/trade_close'

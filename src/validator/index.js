@@ -48,7 +48,7 @@ class Validator {
     }
   }
 
-  validateField (checker, key, data) {
+  validateField (checker, key) {
     if (this.presetKeys.indexOf(key) === -1) {
       this.invalid = true
       this.message = `${key} Parameters should not appear`
@@ -77,21 +77,18 @@ class Validator {
     debug("data: ", data)
     debug("checker: ", checker)
 
-    do {
-      this.validateRequired(checker, key, data)
-      if (this.invalid) break;
-      data = this.normalize(checker, key, data)
-      this.validateEnum(checker, key, data)
-      if (this.invalid) break;      
-      this.validateLength(checker, key, data)
-      if (this.invalid) break;      
-      this.validateField(checker, key, data)
-      if (this.invalid) break; 
-      if (data) {
-        this.result[key] = data
-      }     
-    } while(0)
-
+    this.validateRequired(checker, key, data)
+    if (this.invalid) return this.invalid
+    data = this.normalize(checker, key, data)
+    this.validateEnum(checker, key, data)
+    if (this.invalid) return this.invalid     
+    this.validateLength(checker, key, data)
+    if (this.invalid) return this.invalid    
+    this.validateField(checker, key, data)
+    if (this.invalid) return this.invalid
+    if (data) {
+      this.result[key] = data
+    }
     return this.invalid
   }
 
@@ -100,8 +97,7 @@ class Validator {
       for (let i = 0, len = this.presetKeys.length; i < len; i++) {
         const key = this.presetKeys[i]
         if (this.validate(key)) {
-          reject(new Error(this.message))
-          return;
+          return reject(new Error(this.message))
         }
       }
       resolve(this.result)
@@ -119,11 +115,11 @@ export function validateAPIParams (method, params) {
   let instance
 
   switch (method) {
-    case METHOD_TYPES.CREATE_ORDER : {
+    case METHOD_TYPES.CREATE_ORDER:{
       instance = new Validator(Preset.CreateOrder, params)
       break
     }
-    case METHOD_TYPES.QUERY_ORDER : {
+    case METHOD_TYPES.QUERY_ORDER: {
       instance = new Validator(Preset.QueryOrder, params)    
       break
     }

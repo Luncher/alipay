@@ -1,29 +1,23 @@
-import fs from 'fs'
 import urllib from 'urllib'
-import crypto from 'crypto'
-import makeDebug from 'debug'
 import Promise from 'bluebird'
-import makeBase64 from 'js-base64'
 import config from './config'
 import * as utils from './utils'
 import Validator from './validator'
 import { RESPONSE_MESSAGE, METHOD_TYPES } from './config'
 
-const Base64 = makeBase64.Base64
-const debug = makeDebug('alipay-mobile:index')
 const isPro = process.env.NODE_ENV === 'production'
 
 export default class Alipay {
   constructor(options = {}) {
-    this.privKey = options.appPrivKeyFile;
-    this.publicKey = options.alipayPubKeyFile;
+    this.privKey = options.appPrivKeyFile
+    this.publicKey = options.alipayPubKeyFile
 
     if (!this.privKey || !this.publicKey) {
       throw new Error('Invalid appPrivKeyFile or alipayPubKeyFile')
     }
     this.normalizeKeys()
     const omit = ['appPrivKeyFile', 'alipayPubKeyFile']
-    this.options = Object.assign({}, Object.keys(options).reduce((acc, val, index) => {
+    this.options = Object.assign({}, Object.keys(options).reduce((acc, val) => {
       if (omit.indexOf(val) === -1) {
         acc[val] = options[val]
       }
@@ -42,7 +36,7 @@ export default class Alipay {
     }
   }
 
-  validateBasicParams (method, options) {
+  validateBasicParams (method) {
     const params = Object.assign({}, this.options, { method })
     return Validator.validateBasicParams(params)
   }
@@ -53,7 +47,7 @@ export default class Alipay {
 
   validateParams (method, options) {
     return Promise.all([
-      this.validateBasicParams(method, options),
+      this.validateBasicParams(method),
       this.validateAPIParams(method, options)
     ])
     .then(result => {
@@ -125,7 +119,7 @@ export default class Alipay {
       return this.validateAPIParams(METHOD_TYPES.NOTIFY_RESPONSE, params)
     })
     .then(() => {
-      const resp = { sign, 'async_notify_response': params, sign_type: params.sign_type }
+      const resp = { sign: params.sign, 'async_notify_response': params, sign_type: params.sign_type }
       return utils.verifySign(this.publicKey, resp, ['sign', 'sign_type'], params)
     })
     .then(valid => {
@@ -136,7 +130,7 @@ export default class Alipay {
   }
 
   createOrder (params) {
-    let sign;
+    let sign
     return this.validateParams(METHOD_TYPES.CREATE_ORDER, params)
     .then(params => {
       sign = params.sign

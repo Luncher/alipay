@@ -9,10 +9,10 @@
     }
   },
   "rules": {
-    "semi": 2,
+    "semi": ["error", "never"],
     "eqeqeq": "warn",    
     "no-console": "off",    
-    "indent": ["error", 2]
+    "indent": ["error", 2, { "SwitchCase": 1 }]
   },
   "env": {
     "es6": true,

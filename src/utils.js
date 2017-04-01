@@ -1,5 +1,8 @@
 import crypto from 'crypto'
 import config from './config'
+import makeBase64 from 'js-base64'
+
+const Base64 = makeBase64.Base64
 
 export function makeSignStr(params, omit = ['sign']) {
   return Object.keys(params)
@@ -20,7 +23,7 @@ export function signAlgorithm (signType) {
 export function makeSign (privKey, params) {
   const signStr = makeSignStr(params)
   const algorithm = signAlgorithm(params.sign_type)
-  const signer = crypto.createSign(algorithm);
+  const signer = crypto.createSign(algorithm)
   signer.update(signStr, params.charset)
   return signer.sign(privKey, "base64")
 }
@@ -30,7 +33,7 @@ export function verifySign (publicKey, response, omit, options) {
   if (!type || !response.sign) {
     return false
   } else {
-    const sign = Base64.decode(response.sign);
+    const sign = Base64.decode(response.sign)
     const resp = makeSignStr(response[type], omit)
     const algorithm = signAlgorithm(options.sign_type)
     const verify = crypto.createVerify(algorithm)
