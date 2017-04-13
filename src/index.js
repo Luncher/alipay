@@ -76,7 +76,7 @@ export default class Alipay {
     } else {
       result.code = '-1'
     }
-    result.data = response
+    result.data = response[respType]
     result.message = RESPONSE_MESSAGE[result.code]
 
     return result
