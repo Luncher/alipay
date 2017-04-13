@@ -6,9 +6,10 @@
   "scripts": {
     "compile": "babel src -d lib",
     "prepublish": "npm run compile",
-    "lint": "cross-env BABEL_DISABLE_CACHE=1 NODE_ENV=test ./node_modules/eslint/bin/eslint.js src/*",
+    "lint": "cross-env BABEL_DISABLE_CACHE=1 NODE_ENV=test ./node_modules/.bin/eslint src/*",
     "cov": "cross-env NODE_ENV=test nyc --reporter=lcovonly mocha test/*.js --timeout 15000 --recursive --compilers js:babel-register",
-    "test": "cross-env DEBUG=alipay-mobile:index NODE_ENV=test mocha test/*.js --timeout 15000 --recursive --compilers js:babel-register"
+    "test": "cross-env DEBUG=alipay-mobile:index NODE_ENV=test mocha test/*.js --timeout 15000 --recursive --compilers js:babel-register",
+    "boqii-test": "cross-env DEBUG=alipay-mobile:index NODE_ENV=production mocha boqii-test/*.js --timeout 15000 --recursive --compilers js:babel-register"
   },
   "nyc": {
     "include": [
