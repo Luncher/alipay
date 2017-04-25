@@ -29,16 +29,16 @@ describe('ALIPAY unit test', function () {
     })
   })
 
-  // it('should allow query order', () => {
-  //   const outTradeNo = '1232423'
-  //   return service.queryOrder({ out_trade_no: outTradeNo })
-  //   .then(result => {
-  //     assert(result.code == -1, result.message)
-  //     assert(result.message == 'error', result.message)
-  //     assert(result.data['alipay_trade_query_response'].code === '40004')
-  //     assert(result.data['alipay_trade_query_response'].sub_msg === '交易不存在')
-  //   })
-  // })
+  it('should allow query order', () => {
+    const outTradeNo = '1232423'
+    return service.queryOrder({ out_trade_no: outTradeNo })
+    .then(result => {
+      assert(result.code == -1, result.message)
+      assert(result.message == 'error', result.message)
+      assert(result.data.code === '40004')
+      assert(result.data.sub_msg === '交易不存在')
+    })
+  })
 
   it ('should reject makeNotifyResponse', () => {
     return service.makeNotifyResponse({})
