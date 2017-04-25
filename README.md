@@ -107,9 +107,28 @@ console.log(AlipayConfig.ALIPAY_NOTIFY_FAILURE) // 'failure'
 
 ```
 
-
+---
 
 ## API 说明
+
+### 创建订单`createOrder`
+
+```javascript
+const service = new Alipay(options)
+const data = {
+  subject: '辣条',
+  out_trade_no: '1232423',
+  total_amount: '100'
+}
+return service.createOrder(data)
+.then(result => {
+  assert(result.code == 0, result.message)
+  assert(result.message == 'success', result.message)
+  //result.data 用于返回给APP,传递给支付宝端发起交易申请
+})
+```
+
+---
 
 ### 订单查询`queryOrder`
 
@@ -123,6 +142,23 @@ return service.queryOrder({ out_trade_no: outTradeNo })
   assert(result.data.sub_msg === '交易不存在')
 })
 ```
+
+---
+
+### 取消订单`cancelOrder`
+
+``` javascript
+const outTradeNo = 'foobar'
+return service.cancelOrder({ out_trade_no: outTradeNo })
+.then(result => {
+  assert(result.code == -1, result.message)
+  assert(result.message == 'error', result.message)
+  assert(result.data.code === '40004')
+  assert(result.data.sub_msg === '交易不存在')
+})
+```
+
+>其他接口请参照: `src/index.js`文件。
 
 ---
 
