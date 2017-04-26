@@ -34,7 +34,7 @@
 
 ``` javascript
 
-npm install alipay-mobile -S
+npm i alipay-mobile -S
 
 ```
 
