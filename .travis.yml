@@ -4,13 +4,12 @@ node_js:
 
 sudo: false
 
-cache:
-  directories:
-    node_modules
+# cache:
+#   directories:
+#     node_modules
 
 install:
   - npm install -g codecov
-  - npm install -g cross-env
 
 after_script:
   - npm run cov
