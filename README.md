@@ -12,8 +12,8 @@
 [download-image]: https://img.shields.io/npm/dm/alipay-mobile.svg?style=flat
 [david-url]: https://david-dm.org/Luncher/alipay-mobile
 [david-image]: https://david-dm.org/Luncher/alipay-mobile.svg?style=flat
-[travis-url]: https://travis-ci.org/Luncher/alipay-mobile
-[travis-image]: https://img.shields.io/travis/Luncher/alipay-mobile.svg?style=flat
+[travis-url]: https://travis-ci.org/Luncher/alipay
+[travis-image]: https://img.shields.io/travis/Luncher/alipay.svg?style=flat
 [codecov-url]: https://codecov.io/gh/Luncher/alipay-mobile
 [codecov-image]: https://img.shields.io/codecov/c/github/Luncher/alipay-mobile.svg?style=flat
 
