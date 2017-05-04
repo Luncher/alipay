@@ -10,6 +10,7 @@ cache:
 
 install:
   - npm install -g codecov
+  - npm install -g cross-env
 
 after_script:
   - npm run cov
