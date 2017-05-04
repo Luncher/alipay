@@ -12,12 +12,10 @@ const ALIPAY_PAYMENT_MESSAGE = {
 
 export default {
   memo: {
-    type: 'string',
-    required: true,
+    type: 'string'
   },
   result: {
-    type: 'object',
-    required: true
+    type: 'string'
   },
   resultStatus: {
     type: 'enum',
