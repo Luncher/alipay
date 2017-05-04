@@ -4,11 +4,12 @@ node_js:
 
 sudo: false
 
-# cache:
-#   directories:
-#     node_modules
+cache:
+  directories:
+    node_modules
 
 install:
+  - npm install
   - npm install -g codecov
 
 after_script:
