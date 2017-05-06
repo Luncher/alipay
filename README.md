@@ -94,24 +94,15 @@ return service.createOrder(data)
 }
 ```
 
-### 服务器异步通知应答
-
->在接收到蚂蚁金服服务器的订单状态变更通知之后，需要进行应答，有两种(成功、失败)应答类型：
-
-``` javascript
-import AlipayConfig from 'alipay-mobile/config'
-
-console.log(AlipayConfig.ALIPAY_NOTIFY_SUCCESS) // 'success'
-
-console.log(AlipayConfig.ALIPAY_NOTIFY_FAILURE) // 'failure'
-
-```
+>为了方便异步处理，所有接口均返回`Promise`
 
 ---
 
 ## API 说明
 
 ### 创建订单`createOrder`
+
+>用于返回给APP,传递给支付宝端发起交易申请
 
 ```javascript
 const service = new Alipay(options)
@@ -158,22 +149,135 @@ return service.cancelOrder({ out_trade_no: outTradeNo })
 })
 ```
 
->其他接口请参照: `src/index.js`文件。
+---
+
+### 验证支付结果`verifyPayment`
+
+```javascript
+const params = {
+  memo: "xxxx",
+  result: "xxxx",
+  resultStatus: "xxx"
+}
+return service.verifyPayment(params)
+
+```
+
+---
+
+### 异步通知校验`makeNotifyResponse`
+
+```javascript
+const params = {
+  sign: 'xxxxxxxx',
+  sign_type: 'xxxxx',
+  ...
+}
+
+return service.makeNotifyResponse(params)
+
+```
+
+#### 异步通知应答
+
+>在接收到蚂蚁金服服务器的订单状态变更通知之后，需要进行应答，有两种(成功、失败)应答类型：
+
+``` javascript
+import AlipayConfig from 'alipay-mobile/config'
+
+console.log(AlipayConfig.ALIPAY_NOTIFY_SUCCESS) // 'success'
+
+console.log(AlipayConfig.ALIPAY_NOTIFY_FAILURE) // 'failure'
+
+```
+
+---
+
+### 交易关闭`tradeClose`
+
+```javascript
+const params = {
+  out_trade_no: 'xxxxx'
+}
+return service.tradeClose(params)
+
+```
+
+---
+
+### 交易退款`tradeRefund`
+
+```javascript
+const params = {
+  out_trade_no: 'xxxxx'
+}
+return service.tradeRefund(params)
+```
+
+---
+
+### 交易退款查询`tradeRefundQuery`
+
+```javascript
+const params = {
+  out_trade_no: 'xxxxx'
+}
+return service.tradeRefundQuery(params)
+```
+
+---
+
+### 查询账单下载地址`billDownloadQuery`
+
+```javascript
+const params = {
+  bill_type: 'trade',
+  bill_date: '2017-05-06'
+}
+return service.billDownloadQuery(params)
+
+```
+
+---
+
+### 交易预创建`tradePrecreate`
+
+```javascript
+const params = {
+  out_trade_no: 'xxx',
+  seller_id: 'asad',
+  total_amount: '231wawsda',
+  subject: '面包'
+}
+return service.tradePrecreate(params)
+
+```
+
+---
+
+### 交易结算`tradeSettle`
+
+```javascript
+const params = {
+  out_request_no: 'xxx'
+}
+return service.tradeSettle(params)
+```
 
 ---
 
 ## 功能列表
 
 - [x] 创建订单
-- [x] 关闭交易
-- [x] 订单主动查询
-- [x] 订单异步推送
-- [x] 预创建订单
 - [x] 取消订单
+- [x] 订单查询
+- [x] 验证支付状态
+- [x] 订单状态异步推送
+- [x] 预创建订单
 - [x] 申请退款
 - [x] 退款查询
 - [x] 交易结算
-- [x] 验证支付状态
+- [x] 关闭交易
 - [x] 账单下载地址查询
 
 
