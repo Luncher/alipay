@@ -33,7 +33,8 @@ export function verifySign (publicKey, response, omit, options) {
   if (!type || !response.sign) {
     return false
   } else {
-    const sign = Base64.decode(response.sign)
+    // const sign = Base64.decode(response.sign)
+    const sign = response.sign
     const resp = makeSignStr(response[type], omit)
     const algorithm = signAlgorithm(options.sign_type)
     const verify = crypto.createVerify(algorithm)
