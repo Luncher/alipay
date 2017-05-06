@@ -1,8 +1,5 @@
 import crypto from 'crypto'
 import config from './config'
-import makeBase64 from 'js-base64'
-
-const Base64 = makeBase64.Base64
 
 export function makeSignStr(params, omit = ['sign']) {
   return Object.keys(params)
