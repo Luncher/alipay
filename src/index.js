@@ -5,7 +5,7 @@ import * as utils from './utils'
 import Validator from './validator'
 import { RESPONSE_MESSAGE, METHOD_TYPES } from './config'
 
-const isPro = process.env.NODE_ENV === 'production'
+const isTest = process.env.NODE_ENV === 'test'
 
 export default class Alipay {
   constructor(options = {}) {
@@ -84,7 +84,7 @@ export default class Alipay {
 
   makeRequest (params, options = {}) {
     const httpclient = urllib.create()
-    const gatway = isPro ? config.ALIPAY_GETWAY : config.ALIPAY_DEV_GETWAY
+    const gatway = isTest ? config.ALIPAY_DEV_GETWAY : config.ALIPAY_GETWAY
     return httpclient.request(gatway, Object.assign({}, {
       data: params,
       dataType: 'json',      
