@@ -22,12 +22,26 @@ describe('ALIPAY unit test', function () {
       out_trade_no: '1232423',
       total_amount: '100'
     }
-    return service.createOrder(data)
+    return service.createAppOrder(data)
     .then(result => {
       assert(result.code == 0, result.message)
       assert(result.message == 'success', result.message)
     })
   })
+
+  // it('should allow create query order', () => {
+  //   const data = {
+  //     subject: 'TTFuckYou',
+  //     out_trade_no: '1232423',
+  //     total_amount: '0.1'
+  //   }
+  //   const return_url = "http://www.baidu.com"
+  //   return service.createWebOrderURL(data, { return_url })
+  //   .then(result => {
+  //     assert(result.code == 0, result.message)
+  //     assert(result.message == 'success', result.message)
+  //   })
+  // })
 
   // it('should allow query order', () => {
   //   const outTradeNo = '1232423'
