@@ -4,7 +4,7 @@
 [![Build Status][travis-image]][travis-url]
 [![Codecov Status][codecov-image]][codecov-url]
 [![David Status][david-image]][david-url]
-[![NPM download][download-image]][download-url]
+<!--[![NPM download][download-image]][download-url]-->
 
 [npm-url]: https://www.npmjs.com/package/alipay-mobile
 [npm-image]: https://img.shields.io/npm/v/alipay-mobile.svg?style=flat
