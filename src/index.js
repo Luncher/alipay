@@ -6,6 +6,7 @@ import Validator from './validator'
 import { RESPONSE_MESSAGE, METHOD_TYPES } from './config'
 
 const isTest = process.env.NODE_ENV === 'test'
+const GETWAY = isTest ? config.ALIPAY_DEV_GETWAY : config.ALIPAY_GETWAY
 
 export default class Alipay {
   constructor(options = {}) {
@@ -36,8 +37,8 @@ export default class Alipay {
     }
   }
 
-  validateBasicParams (method) {
-    const params = Object.assign({}, this.options, { method })
+  validateBasicParams (method, basicParams) {
+    const params = Object.assign({}, this.options, basicParams, { method })
     return Validator.validateBasicParams(params)
   }
 
@@ -45,10 +46,10 @@ export default class Alipay {
     return Validator.validateAPIParams(method, options)
   }
 
-  validateParams (method, options) {
+  validateParams (method, publicParams, basicParams) {
     return Promise.all([
-      this.validateBasicParams(method),
-      this.validateAPIParams(method, options)
+      this.validateBasicParams(method, basicParams),
+      this.validateAPIParams(method, publicParams)
     ])
     .then(result => {
       return Object.assign({}, result[0], { biz_content: JSON.stringify(result[1]) })
@@ -84,8 +85,7 @@ export default class Alipay {
 
   makeRequest (params, options = {}) {
     const httpclient = urllib.create()
-    const gatway = isTest ? config.ALIPAY_DEV_GETWAY : config.ALIPAY_GETWAY
-    return httpclient.request(gatway, Object.assign({}, {
+    return httpclient.request(GETWAY, Object.assign({}, {
       data: params,
       dataType: 'json',      
       dataAsQueryString: true
@@ -129,9 +129,39 @@ export default class Alipay {
     .catch(err => ({ code: '-1', message: err.message, data: {} }))
   }
 
-  createOrder (params) {
+  createWebOrderURL (publicParams, basicParams = {}) {
+    return this.createWebOrder(publicParams, basicParams)
+    .then(result => {
+      if (result.code === 0) {
+        result.data = GETWAY + '?' + result.data        
+      }
+      return result
+    })
+  }
+
+  createWebOrder (publicParams, basicParams = {}) {
     let sign
-    return this.validateParams(METHOD_TYPES.CREATE_ORDER, params)
+    return this.validateParams(METHOD_TYPES.CREATE_WEB_ORDER, publicParams, basicParams)
+    .then(params => {
+      sign = params.sign
+      return utils.makeSignStr(params)
+    })
+    .then(signStr => {
+      return signStr.split('&').reduce((acc, cur) => {
+        const [key, value] = cur.split('=')
+        return acc + key + '=' + encodeURIComponent(value) + '&'
+      }, "").slice(0, -1)
+    })
+    .then(data => {
+      data = data + '&sign=' + encodeURIComponent(sign)
+      return { code: 0, message: RESPONSE_MESSAGE[0], data }
+    })
+    .catch(err => ({ code: '-1', message: err.message, data: {} }))
+  }
+
+  createAppOrder (publicParams, basicParams = {}) {
+    let sign
+    return this.validateParams(METHOD_TYPES.CREATE_APP_ORDER, publicParams, basicParams)
     .then(params => {
       sign = params.sign
       return utils.makeSignStr(params)
@@ -149,13 +179,13 @@ export default class Alipay {
     .catch(err => ({ code: '-1', message: err.message, data: {} }))    
   }
 
-  queryOrder (params) {
+  queryOrder (publicParams, basicParams = {}) {
     return Promise.resolve()
     .then(() => {
-      if (!params.out_trade_no && !params.trade_no) {
+      if (!publicParams.out_trade_no && !publicParams.trade_no) {
         throw new Error("outTradeNo and tradeNo can not both omit.")
       }
-      return this.validateParams(METHOD_TYPES.QUERY_ORDER, params)
+      return this.validateParams(METHOD_TYPES.QUERY_ORDER, publicParams, basicParams)
       .then(params => {
         return this.makeRequest(params)
       })
@@ -163,82 +193,82 @@ export default class Alipay {
     .catch(err => ({ code: '-1', message: err.message, data: {} }))    
   }
 
-  cancelOrder (params) {
+  cancelOrder (publicParams, basicParams = {}) {
     return Promise.resolve()
     .then(() => {
-      if (!params.out_trade_no && !params.trade_no) {
+      if (!publicParams.out_trade_no && !publicParams.trade_no) {
         throw new Error("outTradeNo and tradeNo can not both omit.")
       }
-      return this.validateParams(METHOD_TYPES.CANCEL_ORDER, params)
+      return this.validateParams(METHOD_TYPES.CANCEL_ORDER, publicParams, basicParams)
       .then(params => {
         return this.makeRequest(params)
       })
     })
   }
 
-  tradeClose (params) {
+  tradeClose (publicParams, basicParams = {}) {
     return Promise.resolve()
     .then(() => {
-      if (!params.out_trade_no && !params.trade_no) {
+      if (!publicParams.out_trade_no && !publicParams.trade_no) {
         throw new Error("outTradeNo and tradeNo can not both omit.")
       }
-      return this.validateParams(METHOD_TYPES.TRADE_CLOSE, params)
+      return this.validateParams(METHOD_TYPES.TRADE_CLOSE, publicParams, basicParams)
       .then(params => {
         return this.makeRequest(params)
       })
     })
   }
 
-  tradeRefund (params) {
+  tradeRefund (publicParams, basicParams = {}) {
     return Promise.resolve()
     .then(() => {
-      if (!params.out_trade_no && !params.trade_no) {
+      if (!publicParams.out_trade_no && !publicParams.trade_no) {
         throw new Error("outTradeNo and tradeNo can not both omit.")
       }
-      return this.validateParams(METHOD_TYPES.TRADE_REFUND, params)
+      return this.validateParams(METHOD_TYPES.TRADE_REFUND, publicParams, basicParams)
       .then(params => {
         return this.makeRequest(params)
       })
     })
   }
 
-  tradeRefundQuery (params) {
+  tradeRefundQuery (publicParams, basicParams = {}) {
     return Promise.resolve()
     .then(() => {
-      if (!params.out_trade_no && !params.trade_no) {
+      if (!publicParams.out_trade_no && !publicParams.trade_no) {
         throw new Error("outTradeNo and tradeNo can not both omit.")
       }
-      return this.validateParams(METHOD_TYPES.TRADE_REFUND_QUERY, params)
+      return this.validateParams(METHOD_TYPES.TRADE_REFUND_QUERY, publicParams, basicParams)
       .then(params => {
         return this.makeRequest(params)
       })
     })
   }
 
-  billDownloadQuery (params) {
+  billDownloadQuery (publicParams, basicParams = {}) {
     return Promise.resolve()
     .then(() => {
-      return this.validateParams(METHOD_TYPES.BILL_DOWNLOAD_QUERY, params)
+      return this.validateParams(METHOD_TYPES.BILL_DOWNLOAD_QUERY, publicParams, basicParams)
       .then(params => {
         return this.makeRequest(params)
       })
     })
   }
 
-  tradePrecreate (params) {
+  tradePrecreate (publicParams, basicParams = {}) {
     return Promise.resolve()
     .then(() => {
-      return this.validateParams(METHOD_TYPES.TRADE_PRECREATE, params)
+      return this.validateParams(METHOD_TYPES.TRADE_PRECREATE, publicParams, basicParams)
       .then(params => {
         return this.makeRequest(params)
       })
     })
   }
 
-  tradeSettle (params) {
+  tradeSettle (publicParams, basicParams = {}) {
     return Promise.resolve()
     .then(() => {
-      return this.validateParams(METHOD_TYPES.TRADE_SETTLE, params)
+      return this.validateParams(METHOD_TYPES.TRADE_SETTLE, publicParams, basicParams)
       .then(params => {
         return this.makeRequest(params)
       })
