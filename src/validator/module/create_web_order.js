@@ -1,38 +1,4 @@
-'use strict'
-
 import * as utils from '../utils'
-
-const extendParams = {
-  type: 'enum',
-  enums: [
-    'sys_service_provider_id',
-    'needBuyerRealnamed',
-    'TRANS_MEMO'
-  ]
-}
-
-const payChannel = {
-  type: 'enum',
-  enums: [
-    'balance',
-    'moneyFund',
-    'coupon',
-    'pcredit',
-    'pcreditpayInstallment',
-    'creditCard',
-    'creditCardExpress',
-    'creditCardCartoon',
-    'credit_group',
-    'debitCardExpress',
-    'mcard',
-    'pcard',
-    'promotion',
-    'voucher',
-    'point',
-    'mdiscount',
-    'bankPay'
-  ]
-}
 
 export default {
   body: {
@@ -66,7 +32,7 @@ export default {
   product_code: {
     type: 'string',
     maxLength: 64,
-    default: 'QUICK_MSECURITY_PAY'
+    default: 'QUICK_WAP_PAY'
   },
   goods_type: {
     type: 'enum',
@@ -77,13 +43,13 @@ export default {
     maxLength: 512,
     normalize: utils.normalizePassbackParams
   },
-  extend_params: extendParams,
-  enable_pay_channels: payChannel,
-  disable_pay_channels: payChannel,
   promo_params: {
     type: 'string',
     maxLength: 512
   },
+  extend_params: utils.extendParams,
+  enable_pay_channels: utils.payChannel,
+  disable_pay_channels: utils.payChannel,
   store_id: {
     type: 'string',
     maxLength: 32

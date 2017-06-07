@@ -1,5 +1,3 @@
-'use strict'
-
 export default {
   bill_type: {
     type: 'string',

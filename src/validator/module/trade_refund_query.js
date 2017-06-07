@@ -1,5 +1,3 @@
-'use strict'
-
 export default {
   out_trade_no: {
     type: 'string',

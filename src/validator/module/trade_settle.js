@@ -1,5 +1,3 @@
-'use strict'
-
 export default {
   out_request_no: {
     type: 'string',

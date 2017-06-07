@@ -115,8 +115,12 @@ export function validateAPIParams (method, params) {
   let instance
 
   switch (method) {
-    case METHOD_TYPES.CREATE_ORDER:{
-      instance = new Validator(Preset.CreateOrder, params)
+    case METHOD_TYPES.CREATE_WEB_ORDER: {
+      instance = new Validator(Preset.CreateWebOrder, params)
+      break
+    }
+    case METHOD_TYPES.CREATE_APP_ORDER: {
+      instance = new Validator(Preset.CreateAppOrder, params)
       break
     }
     case METHOD_TYPES.QUERY_ORDER: {

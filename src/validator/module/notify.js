@@ -1,5 +1,3 @@
-'use strict'
-
 export default {
   notify_time: {
     type: 'string',

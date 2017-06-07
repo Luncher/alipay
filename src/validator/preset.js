@@ -1,12 +1,11 @@
-'use strict'
-
 import * as utils from './utils'
 import Notify from './module/notify'
 import TradeClose from './module/trade_close'
 import TradeSettle from './module/trade_settle'
 import TradeRefund from './module/trade_refund'
 import QueryOrder from './module/query_order'
-import CreateOrder from './module/create_order'
+import CreateAppOrder from './module/create_app_order'
+import CreateWebOrder from './module/create_web_order'
 import CancelOrder from './module/cancel_order'
 import VerifyPayment from './module/verify_payment'
 import TradePrecreate from './module/trade_precreate'
@@ -29,6 +28,10 @@ const Basic = {
     type: 'string',
     default: 'JSON',
     maxLength: 40
+  },
+  return_url: { //用于网页支付回调
+    type: 'string',
+    maxLength: 256
   },
   charset: {
     type: 'string',
@@ -64,7 +67,8 @@ export default {
   Basic,  
   Notify,
   VerifyPayment,
-  CreateOrder,  
+  CreateAppOrder,
+  CreateWebOrder,
   QueryOrder,
   TradeSettle,
   CancelOrder,
