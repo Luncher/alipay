@@ -22,14 +22,6 @@
 
 ---
 
-## 测试
-
-+ 1 `git clone`
-
-+ 2 `设置 appid 以及秘钥和公钥`
-
-+ 3 `npm t` 运行测试
-
 ## 安装
 
 ``` javascript
@@ -116,6 +108,29 @@ return service.createOrder(data)
   assert(result.code == 0, result.message)
   assert(result.message == 'success', result.message)
   //result.data 用于返回给APP,传递给支付宝端发起交易申请
+})
+```
+
+---
+
+### 创建网页订单`createWebOrder`
+
+>该接口用于支付宝手机网页支付，服务端调用该接口生成一个`URL`返回给客户端, 客户端拿到该`URL`之后跳转到该URL发起支付请求。支付结束支付宝会跳转到客户端填写的`return_url`。
+
+``` javascript
+const service = new Alipay(options)
+const data = {
+  subject: '辣条',
+  out_trade_no: '1232423',
+  total_amount: '100'
+}
+const basicParams = {
+  return_url: 'http://xxx.com'
+}
+return service.createWebOrder(data, basicParams)
+.then(result => {
+  assert(result.code == 0, result.message)
+  assert(result.message == 'success', result.message)
 })
 ```
 

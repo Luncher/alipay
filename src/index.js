@@ -159,6 +159,11 @@ export default class Alipay {
     .catch(err => ({ code: '-1', message: err.message, data: {} }))
   }
 
+  //Compatible with old code
+  createOrder (publicParams, basicParams = {}) {
+    return this.createAppOrder(publicParams, basicParams)
+  }
+
   createAppOrder (publicParams, basicParams = {}) {
     let sign
     return this.validateParams(METHOD_TYPES.CREATE_APP_ORDER, publicParams, basicParams)
