@@ -2,7 +2,7 @@
 
 [![NPM version][npm-image]][npm-url]
 [![Build Status][travis-image]][travis-url]
-[![Codecov Status][codecov-image]][codecov-url]
+<!--[![Codecov Status][codecov-image]][codecov-url]-->
 [![David Status][david-image]][david-url]
 <!--[![NPM download][download-image]][download-url]-->
 
@@ -33,7 +33,8 @@ npm i alipay-mobile -S
 ## 基本使用
 
 ``` javascript
-import Alipay from 'alipay-mobile'
+const fs = require('fs')
+const Alipay = require('alipay-mobile)
 
 const read = filename => {
   return fs.readFileSync(path.resolve(__dirname, filename))
