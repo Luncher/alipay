@@ -34,7 +34,7 @@ npm i alipay-mobile -S
 
 ``` javascript
 const fs = require('fs')
-const Alipay = require('alipay-mobile)
+const Alipay = require('alipay-mobile')
 
 const read = filename => {
   return fs.readFileSync(path.resolve(__dirname, filename))
