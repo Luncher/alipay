@@ -2,8 +2,8 @@
 
 [![NPM version][npm-image]][npm-url]
 [![Build Status][travis-image]][travis-url]
-<!--[![Codecov Status][codecov-image]][codecov-url]-->
 [![David Status][david-image]][david-url]
+<!--[![Codecov Status][codecov-image]][codecov-url]-->
 <!--[![NPM download][download-image]][download-url]-->
 
 [npm-url]: https://www.npmjs.com/package/alipay-mobile
