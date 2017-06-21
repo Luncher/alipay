@@ -114,7 +114,7 @@ return service.createOrder(data)
 
 ---
 
-### 创建网页订单`createWebOrder`
+### 创建网页订单`createWebOrderURL`
 
 >该接口用于支付宝手机网页支付，服务端调用该接口生成一个`URL`返回给客户端, 客户端拿到该`URL`之后跳转到该URL发起支付请求。支付结束支付宝会跳转到客户端填写的`return_url`。
 
