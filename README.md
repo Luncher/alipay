@@ -128,7 +128,7 @@ const data = {
 const basicParams = {
   return_url: 'http://xxx.com'
 }
-return service.createWebOrder(data, basicParams)
+return service.createWebOrderURL(data, basicParams)
 .then(result => {
   assert(result.code == 0, result.message)
   assert(result.message == 'success', result.message)
