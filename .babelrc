@@ -14,7 +14,8 @@
   ],
   "plugins": [
     ["babel-plugin-root-import", {
-      "rootPathSuffix": "src/"
-    }]
+      "rootPathSuffix": "lib/"
+    }],
+    "add-module-exports"
   ]
 }
