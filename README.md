@@ -65,6 +65,8 @@ return service.createOrder(data)
 
 ## 说明
 
+>详细参数请参考接口对应的官方文档
+
 ### 接口返回错误码以及错误信息
 
 ``` javascript
@@ -95,7 +97,9 @@ return service.createOrder(data)
 
 ### 创建订单`createOrder`
 
->用于返回给APP,传递给支付宝端发起交易申请
+[APP支付官方文档](https://docs.open.alipay.com/204/105465/)
+
+>用于返回给APP,传递给支付宝端发起交易申请 
 
 ```javascript
 const service = new Alipay(options)
@@ -115,6 +119,8 @@ return service.createOrder(data)
 ---
 
 ### 创建网页订单`createWebOrderURL`
+
+[手机网页支付官方文档](https://docs.open.alipay.com/203/107090/)
 
 >该接口用于支付宝手机网页支付，服务端调用该接口生成一个`URL`返回给客户端, 客户端拿到该`URL`之后跳转到该URL发起支付请求。支付结束支付宝会跳转到客户端填写的`return_url`。
 
@@ -139,6 +145,8 @@ return service.createWebOrderURL(data, basicParams)
 
 ### 订单查询`queryOrder`
 
+[订单查询官方文档](https://docs.open.alipay.com/api_1/alipay.trade.query)
+
 ``` javascript
 const outTradeNo = '1232423'
 return service.queryOrder({ out_trade_no: outTradeNo })
@@ -153,6 +161,8 @@ return service.queryOrder({ out_trade_no: outTradeNo })
 ---
 
 ### 取消订单`cancelOrder`
+
+[取消订单官方文档](https://docs.open.alipay.com/api_1/alipay.trade.cancel)
 
 ``` javascript
 const outTradeNo = 'foobar'
@@ -183,6 +193,8 @@ return service.verifyPayment(params)
 
 ### 异步通知校验`makeNotifyResponse`
 
+[异步通知官方文档](https://docs.open.alipay.com/204/105301/)
+
 ```javascript
 const params = {
   sign: 'xxxxxxxx',
@@ -211,6 +223,8 @@ console.log(AlipayConfig.ALIPAY_NOTIFY_FAILURE) // 'failure'
 
 ### 交易关闭`tradeClose`
 
+[关闭交易官方文档](https://docs.open.alipay.com/api_1/alipay.trade.close/)
+
 ```javascript
 const params = {
   out_trade_no: 'xxxxx'
@@ -223,6 +237,8 @@ return service.tradeClose(params)
 
 ### 交易退款`tradeRefund`
 
+[交易退款官方文档](https://docs.open.alipay.com/api_1/alipay.trade.refund/)
+
 ```javascript
 const params = {
   out_trade_no: 'xxxxx'
@@ -233,6 +249,8 @@ return service.tradeRefund(params)
 ---
 
 ### 交易退款查询`tradeRefundQuery`
+
+[交易退款查询官方文档](https://docs.open.alipay.com/api_1/alipay.trade.fastpay.refund.query/)
 
 ```javascript
 const params = {
@@ -258,6 +276,8 @@ return service.billDownloadQuery(params)
 
 ### 交易预创建`tradePrecreate`
 
+[交易预创建官方文档](https://docs.open.alipay.com/api_1/alipay.trade.create/)
+
 ```javascript
 const params = {
   out_trade_no: 'xxx',
@@ -272,6 +292,8 @@ return service.tradePrecreate(params)
 ---
 
 ### 交易结算`tradeSettle`
+
+[交易结算官方文档](https://docs.open.alipay.com/api_1/alipay.trade.order.settle/)
 
 ```javascript
 const params = {
