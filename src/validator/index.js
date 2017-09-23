@@ -123,6 +123,10 @@ export function validateAPIParams (method, params) {
       instance = new Validator(Preset.CreateAppOrder, params)
       break
     }
+    case METHOD_TYPES.CREATE_PAGE_ORDER: {
+      instance = new Validator(Preset.CreatePageOrder, params)      
+      break
+    }
     case METHOD_TYPES.QUERY_ORDER: {
       instance = new Validator(Preset.QueryOrder, params)    
       break

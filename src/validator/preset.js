@@ -6,6 +6,7 @@ import TradeRefund from './module/trade_refund'
 import QueryOrder from './module/query_order'
 import CreateAppOrder from './module/create_app_order'
 import CreateWebOrder from './module/create_web_order'
+import CreatePageOrder from './module/create_page_order'
 import CancelOrder from './module/cancel_order'
 import VerifyPayment from './module/verify_payment'
 import TradePrecreate from './module/trade_precreate'
@@ -69,6 +70,7 @@ export default {
   VerifyPayment,
   CreateAppOrder,
   CreateWebOrder,
+  CreatePageOrder,
   QueryOrder,
   TradeSettle,
   CancelOrder,

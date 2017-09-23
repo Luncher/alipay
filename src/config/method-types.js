@@ -1,6 +1,7 @@
 export const QUERY_ORDER = 'alipay.trade.query'
 export const CREATE_APP_ORDER = 'alipay.trade.app.pay'
 export const CREATE_WEB_ORDER = 'alipay.trade.wap.pay'
+export const CREATE_PAGE_ORDER = 'alipay.trade.page.pay'
 export const TRADE_CLOSE = 'alipay.trade.close'
 export const CANCEL_ORDER = 'alipay.trade.cancel'
 export const TRADE_REFUND = 'alipay.trade.refund'
@@ -16,6 +17,7 @@ export const METHOD_TYPES = {
   QUERY_ORDER,
   CREATE_APP_ORDER,
   CREATE_WEB_ORDER,
+  CREATE_PAGE_ORDER,
   CANCEL_ORDER,
   TRADE_CLOSE,
   TRADE_SETTLE,

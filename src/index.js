@@ -138,6 +138,36 @@ export default class Alipay {
       return result
     })
   }
+  
+  createPageOrderURL (publicParams, basicParams = {}) {
+    return this.createPageOrder(publicParams, basicParams)
+    .then(result => {
+      if (result.code === 0) {
+        result.data = GETWAY + '?' + result.data        
+      }
+      return result
+    })
+  }
+
+  createPageOrder(publicParams, basicParams = {}) {
+    let sign
+    return this.validateParams(METHOD_TYPES.CREATE_PAGE_ORDER, publicParams, basicParams)
+    .then(params => {
+      sign = params.sign
+      return utils.makeSignStr(params)
+    })
+    .then(signStr => {
+      return signStr.split('&').reduce((acc, cur) => {
+        const [key, value] = cur.split('=')
+        return acc + key + '=' + encodeURIComponent(value) + '&'
+      }, "").slice(0, -1)
+    })
+    .then(data => {
+      data = data + '&sign=' + encodeURIComponent(sign)
+      return { code: 0, message: RESPONSE_MESSAGE[0], data }
+    })
+    .catch(err => ({ code: '-1', message: err.message, data: {} }))
+  }
 
   createWebOrder (publicParams, basicParams = {}) {
     let sign
@@ -159,7 +189,7 @@ export default class Alipay {
     .catch(err => ({ code: '-1', message: err.message, data: {} }))
   }
 
-  //Compatible with old code
+  //Compat
   createOrder (publicParams, basicParams = {}) {
     return this.createAppOrder(publicParams, basicParams)
   }
