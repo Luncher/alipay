@@ -143,6 +143,28 @@ return service.createWebOrderURL(data, basicParams)
 
 ---
 
+### 创建pc端订单`createPageOrderURL`
+[创建pc端订单官方文档](https://docs.open.alipay.com/270/105899/)
+
+``` javascript
+const service = new Alipay(options)
+const data = {
+  subject: '辣条',
+  out_trade_no: '1232423',
+  total_amount: '100'
+}
+const basicParams = {
+  return_url: 'http://xxx.com'
+}
+return service.createPageOrderURL(data, basicParams)
+.then(result => {
+  assert(result.code == 0, result.message)
+  assert(result.message == 'success', result.message)
+})
+```
+
+---
+
 ### 订单查询`queryOrder`
 
 [订单查询官方文档](https://docs.open.alipay.com/api_1/alipay.trade.query)
