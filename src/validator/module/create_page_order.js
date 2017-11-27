@@ -32,7 +32,7 @@ export default {
   product_code: {
     type: 'string',
     maxLength: 64,
-    default: 'QUICK_WAP_PAY'
+    default: 'FAST_INSTANT_TRADE_PAY'
   },
   goods_type: {
     type: 'enum',
