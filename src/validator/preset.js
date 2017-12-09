@@ -12,7 +12,7 @@ import VerifyPayment from './module/verify_payment'
 import TradePrecreate from './module/trade_precreate'
 import TradeRefundQuery from './module/trade_refund_query'
 import BillDownloadQuery from './module/bill_download_query'
-
+import ToaccountTransfer from './module/toaccount_transfer'
 
 const Basic = {
   app_id: {
@@ -78,5 +78,6 @@ export default {
   TradeRefund,
   TradePrecreate,
   TradeRefundQuery,
-  BillDownloadQuery
+  BillDownloadQuery,
+  ToaccountTransfer,
 }

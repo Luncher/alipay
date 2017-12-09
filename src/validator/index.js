@@ -167,6 +167,10 @@ export function validateAPIParams (method, params) {
       instance = new Validator(Preset.TradeSettle, params)
       break
     }
+    case METHOD_TYPES.FUND_TRANS_TOACCOUNT_TRANSFER: {
+      instance = new Validator(Preset.ToaccountTransfer, params)      
+      break
+    }
     default: {
       throw new Error(`Parser Unknow method type:${method}`)
     }

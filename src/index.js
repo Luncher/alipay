@@ -309,4 +309,14 @@ export default class Alipay {
       })
     })
   }
+
+  toaccountTransfer (publicParams, basicParams = {}) {
+    return Promise.resolve()
+    .then(() => {
+      return this.validateParams(METHOD_TYPES.FUND_TRANS_TOACCOUNT_TRANSFER, publicParams, basicParams)
+      .then(params => {
+        return this.makeRequest(params)
+      })
+    })
+  }
 }

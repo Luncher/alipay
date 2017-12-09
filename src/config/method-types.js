@@ -9,7 +9,7 @@ export const TRADE_SETTLE = 'alipay.trade.order.settle'
 export const TRADE_PRECREATE = 'alipay.trade.precreate'
 export const TRADE_REFUND_QUERY = 'alipay.trade.fastpay.refund.query'
 export const BILL_DOWNLOAD_QUERY = 'alipay.data.dataservice.bill.downloadurl.query'
-
+export const FUND_TRANS_TOACCOUNT_TRANSFER = 'alipay.fund.trans.toaccount.transfer'
 export const VERIFY_PAYMENT = 'verify.payment.status' //self define
 export const NOTIFY_RESPONSE = 'notify.response' //self define
 
@@ -25,6 +25,7 @@ export const METHOD_TYPES = {
   TRADE_PRECREATE,
   TRADE_REFUND_QUERY,
   BILL_DOWNLOAD_QUERY,
+  FUND_TRANS_TOACCOUNT_TRANSFER,
 
   VERIFY_PAYMENT,
   NOTIFY_RESPONSE
