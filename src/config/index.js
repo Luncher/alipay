@@ -6,6 +6,7 @@ export default {
   ALIPAY_GETWAY: 'https://openapi.alipay.com/gateway.do',
   ALIPAY_API_LIST: {
     'alipay.trade.query': '订单查询',
+    'alipay.trade.refund': '交易退款',
     'alipay.trade.app.pay': '生成创建订单所需参数',
     'async.notify': '异步通知' // 自定义
   },
