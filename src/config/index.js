@@ -7,6 +7,11 @@ export default {
   ALIPAY_API_LIST: {
     'alipay.trade.query': '订单查询',
     'alipay.trade.refund': '交易退款',
+    'alipay.trade.cancel': '取消订单',
+    'alipay.trade.close': '关闭交易',
+    'alipay.trade.create': '创建交易',
+    'alipay.trade.order.settle': '交易结算',
+    'alipay.trade.fastpay.refund.query': '交易退款查询',
     'alipay.trade.app.pay': '生成创建订单所需参数',
     'async.notify': '异步通知' // 自定义
   },
