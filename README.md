@@ -326,6 +326,24 @@ return service.tradeSettle(params)
 
 ---
 
+### 单笔转账到支付宝账户接口`toaccountTransfer`
+
+[接口文档](https://docs.open.alipay.com/api_28/alipay.fund.trans.toaccount.transfer/)
+
+```javascript
+const params = {
+  out_biz_no: "1234",
+  payee_type: 'ALIPAY_LOGONID',
+  payee_account: "user666",
+  amount: "100"
+}
+
+return service.toaccountTransfer(params)
+
+```
+
+---
+
 ## 功能列表
 
 - [x] 创建订单
@@ -339,7 +357,7 @@ return service.tradeSettle(params)
 - [x] 交易结算
 - [x] 关闭交易
 - [x] 账单下载地址查询
-
+- [x] 单笔转账到支付宝账户
 
 ---
 
