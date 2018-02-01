@@ -8,11 +8,16 @@ import {
 	METHOD_TYPES
 } from './config';
 
-const isTest = process.env.NODE_ENV === 'test';
-const GATEWAY = isTest ? config.ALIPAY_DEV_GATEWAY : config.ALIPAY_GATEWAY;
 
 export default class Alipay {
 	constructor(options = {}) {
+		// initialize the gateway
+		if (options.isDev || process.env.NODE_ENV === 'development'){
+			this.GATEWAY = config.ALIPAY_DEV_GATEWAY;
+		} else {
+			this.GATEWAY = config.ALIPAY_GATEWAY;
+		}
+
 		// read in key file using path
 		const fs = require('fs');
 
@@ -39,7 +44,7 @@ export default class Alipay {
 			throw new Error('Invalid appPrivKeyFile or alipayPubKeyFile');
 		}
 		this.normalizeKeys();
-		const omit = ['appPrivKeyFile', 'alipayPubKeyFile'];
+		const omit = ['appPrivKeyFile', 'alipayPubKeyFile', 'privateKeyPath','aliKeyPath'];
 		this.options = Object.assign({}, Object.keys(options).reduce((acc, val) => {
 			if (omit.indexOf(val) === -1) {
 				acc[val] = options[val];
@@ -111,7 +116,7 @@ export default class Alipay {
 
 	makeRequest(params, options = {}) {
 		const httpclient = urllib.create();
-		return httpclient.request(GATEWAY, Object.assign({}, {
+		return httpclient.request(this.GATEWAY, Object.assign({}, {
 				data: params,
 				dataType: 'json',
 				dataAsQueryString: true
@@ -146,6 +151,12 @@ export default class Alipay {
 			}));
 	}
 
+	verifyReqSign(){
+
+	}
+
+	
+
 	makeNotifyResponse(params) {
 		return Promise.resolve()
 			.then(() => {
@@ -178,7 +189,7 @@ export default class Alipay {
 		return this.createWebOrder(publicParams, basicParams)
 			.then(result => {
 				if (result.code === 0) {
-					result.data = GATEWAY + '?' + result.data;
+					result.data = this.GATEWAY + '?' + result.data;
 				}
 				return result;
 			});
@@ -188,7 +199,7 @@ export default class Alipay {
 		return this.createPageOrder(publicParams, basicParams)
 			.then(result => {
 				if (result.code === 0) {
-					result.data = GATEWAY + '?' + result.data;
+					result.data = this.GATEWAY + '?' + result.data;
 				}
 				return result;
 			});
