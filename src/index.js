@@ -151,8 +151,10 @@ export default class Alipay {
 			}));
 	}
 
-	verifyReqSign(){
-
+	// verify the params from the payment service
+	// with its sign without worrying the params' type
+	verifyParamSign(params){
+		return utils.verifyParamSign(this.publicKey, params);
 	}
 
 	

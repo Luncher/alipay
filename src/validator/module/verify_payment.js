@@ -1,4 +1,4 @@
-import * as utils from '../utils'
+import * as utils from '../utils';
 
 export default {
   memo: {
@@ -11,4 +11,4 @@ export default {
     type: 'enum',
     enums: Object.keys(utils.ALIPAY_PAYMENT_MESSAGE)
   }
-}
+};

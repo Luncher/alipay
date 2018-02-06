@@ -25,6 +25,24 @@ export function makeSign(privKey, params) {
 	return signer.sign(privKey, "base64");
 }
 
+// verify a signed param object
+export function verifyParamSign(publicKey, params,
+	omit = ['sign', 'sign_type']) {
+	if (typeof params !== 'object') return false;
+
+	const sign = params.sign;
+	if (!sign) return false;
+
+	const sign_type = params.sign_type || 'RSA2';
+	const charset = params.charset || 'utf-8';
+	const paramString = makeSignStr(params, omit);
+	const algorithm = signAlgorithm(sign_type);
+	const verify = crypto.createVerify(algorithm);
+	verify.update(paramString, charset);
+	return verify.verify(publicKey, sign, 'base64');
+
+}
+
 export function verifySign(publicKey, response, omit, options) {
 	const type = responseType(response);
 	if (!type || !response.sign) {
@@ -39,6 +57,7 @@ export function verifySign(publicKey, response, omit, options) {
 		return verify.verify(publicKey, sign, 'base64');
 	}
 }
+
 
 export function responseType(response) {
 	const type = Object.keys(config.ALIPAY_API_LIST)
