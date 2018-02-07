@@ -8,28 +8,26 @@ import {
 	METHOD_TYPES
 } from './config';
 
+const fs = require('fs');
+
+const read = filename => {
+	return fs.readFileSync(filename);
+};
 
 export default class Alipay {
 	constructor(options = {}) {
 		// initialize the gateway
-		if (options.isDev || process.env.NODE_ENV === 'development'){
+		if (options.isDev || process.env.NODE_ENV === 'development') {
 			this.GATEWAY = config.ALIPAY_DEV_GATEWAY;
 		} else {
 			this.GATEWAY = config.ALIPAY_GATEWAY;
 		}
 
 		// read in key file using path
-		const fs = require('fs');
-
-		const read = filename => {
-			return fs.readFileSync(filename);
-		};
-
 		if (!(options.appPrivKeyFile || options.privateKeyPath) ||
 			!(options.alipayPubKeyFile || options.aliKeyPath)) {
 			throw new Error('Must provide app private key and Alipay public key');
 		}
-
 		if (!options.appPrivKeyFile) {
 			options.appPrivKeyFile = read(options.privateKeyPath);
 		}
@@ -44,7 +42,8 @@ export default class Alipay {
 			throw new Error('Invalid appPrivKeyFile or alipayPubKeyFile');
 		}
 		this.normalizeKeys();
-		const omit = ['appPrivKeyFile', 'alipayPubKeyFile', 'privateKeyPath','aliKeyPath'];
+		this.config = config;
+		const omit = ['appPrivKeyFile', 'alipayPubKeyFile', 'privateKeyPath', 'aliKeyPath'];
 		this.options = Object.assign({}, Object.keys(options).reduce((acc, val) => {
 			if (omit.indexOf(val) === -1) {
 				acc[val] = options[val];
@@ -153,11 +152,11 @@ export default class Alipay {
 
 	// verify the params from the payment service
 	// with its sign without worrying the params' type
-	verifyParamSign(params){
+	verifyParamSign(params) {
 		return utils.verifyParamSign(this.publicKey, params);
 	}
 
-	
+
 
 	makeNotifyResponse(params) {
 		return Promise.resolve()
