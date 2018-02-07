@@ -1,18 +1,19 @@
-import * as utils from './utils'
-import Notify from './module/notify'
-import TradeClose from './module/trade_close'
-import TradeSettle from './module/trade_settle'
-import TradeRefund from './module/trade_refund'
-import QueryOrder from './module/query_order'
-import CreateAppOrder from './module/create_app_order'
-import CreateWebOrder from './module/create_web_order'
-import CreatePageOrder from './module/create_page_order'
-import CancelOrder from './module/cancel_order'
-import VerifyPayment from './module/verify_payment'
-import TradePrecreate from './module/trade_precreate'
-import TradeRefundQuery from './module/trade_refund_query'
-import BillDownloadQuery from './module/bill_download_query'
-import ToaccountTransfer from './module/toaccount_transfer'
+import * as utils from './utils';
+import Notify from './module/notify';
+import TradeClose from './module/trade_close';
+import TradeSettle from './module/trade_settle';
+import TradeRefund from './module/trade_refund';
+import QueryOrder from './module/query_order';
+import CreateAppOrder from './module/create_app_order';
+import CreateWebOrder from './module/create_web_order';
+import CreatePageOrder from './module/create_page_order';
+import PageOrderReturn from './module/page_order_return';
+import CancelOrder from './module/cancel_order';
+import VerifyPayment from './module/verify_payment';
+import TradePrecreate from './module/trade_precreate';
+import TradeRefundQuery from './module/trade_refund_query';
+import BillDownloadQuery from './module/bill_download_query';
+import ToaccountTransfer from './module/toaccount_transfer';
 
 const Basic = {
   app_id: {
@@ -62,7 +63,7 @@ const Basic = {
     type: 'string',
     maxLength: 256
   }
-}
+};
 
 export default {
   Basic,  
@@ -71,6 +72,7 @@ export default {
   CreateAppOrder,
   CreateWebOrder,
   CreatePageOrder,
+  PageOrderReturn,
   QueryOrder,
   TradeSettle,
   CancelOrder,
@@ -79,5 +81,5 @@ export default {
   TradePrecreate,
   TradeRefundQuery,
   BillDownloadQuery,
-  ToaccountTransfer,
-}
+  ToaccountTransfer
+};
