@@ -1,3 +1,4 @@
+export { CODE } from './api-code'
 export { RESPONSE_MESSAGE } from './api'
 export { METHOD_TYPES } from './method-types'
 

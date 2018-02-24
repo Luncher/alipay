@@ -3,7 +3,7 @@ import Promise from 'bluebird'
 import config from './config'
 import * as utils from './utils'
 import Validator from './validator'
-import { RESPONSE_MESSAGE, METHOD_TYPES } from './config'
+import { CODE, RESPONSE_MESSAGE, METHOD_TYPES } from './config'
 
 const isTest = process.env.NODE_ENV === 'test'
 const GETWAY = isTest ? config.ALIPAY_DEV_GETWAY : config.ALIPAY_GETWAY
@@ -71,11 +71,11 @@ export default class Alipay {
     const respType = utils.responseType(response)
     const respData = response[respType]
     if (isSucceed(respData)) {
-      result.code = '0'
+      result.code = CODE.SUCCESS
     } else if (isPermissionDenied(respData)) {
-      result.code = '-2'
+      result.code = CODE.PERMISSION_DENIED
     } else {
-      result.code = '-1'
+      result.code = CODE.ERROR
     }
     result.data = response[respType]
     result.message = RESPONSE_MESSAGE[result.code]
@@ -106,11 +106,11 @@ export default class Alipay {
       if (isSuccess()) {
         return this.makeResponse(params.result)
       } else {
-        const code = isProcessing() ? '1' : '-1'
+        const code = isProcessing() ? CODE.PROCESSING : CODE.ERROR
         return { code, message: RESPONSE_MESSAGE[code] }
       }
     })
-    .catch(err => ({ code: '-1', message: err.message, data: {} }))    
+    .catch(err => ({ code: CODE.ERROR, message: err.message, data: {} }))    
   }
 
   makeNotifyResponse (params) {
@@ -123,16 +123,16 @@ export default class Alipay {
       return utils.verifySign(this.publicKey, resp, ['sign', 'sign_type'], params)
     })
     .then(valid => {
-      const code = valid ? '0' : '-2'
+      const code = valid ? CODE.SUCCESS : CODE.SIGN_ERROR
       return { code, message: RESPONSE_MESSAGE[code], data: params }
     })
-    .catch(err => ({ code: '-1', message: err.message, data: {} }))
+    .catch(err => ({ code: CODE.ERROR, message: err.message, data: {} }))
   }
 
   createWebOrderURL (publicParams, basicParams = {}) {
     return this.createWebOrder(publicParams, basicParams)
     .then(result => {
-      if (result.code === 0) {
+      if (result.code === CODE.SUCCESS) {
         result.data = GETWAY + '?' + result.data        
       }
       return result
@@ -142,7 +142,7 @@ export default class Alipay {
   createPageOrderURL (publicParams, basicParams = {}) {
     return this.createPageOrder(publicParams, basicParams)
     .then(result => {
-      if (result.code === 0) {
+      if (result.code === CODE.SUCCESS) {
         result.data = GETWAY + '?' + result.data        
       }
       return result
@@ -164,9 +164,10 @@ export default class Alipay {
     })
     .then(data => {
       data = data + '&sign=' + encodeURIComponent(sign)
-      return { code: 0, message: RESPONSE_MESSAGE[0], data }
+      const code = CODE.SUCCESS
+      return { code, message: RESPONSE_MESSAGE[code], data }
     })
-    .catch(err => ({ code: '-1', message: err.message, data: {} }))
+    .catch(err => ({ code: CODE.ERROR, message: err.message, data: {} }))
   }
 
   createWebOrder (publicParams, basicParams = {}) {
@@ -184,9 +185,10 @@ export default class Alipay {
     })
     .then(data => {
       data = data + '&sign=' + encodeURIComponent(sign)
-      return { code: 0, message: RESPONSE_MESSAGE[0], data }
+      const code = CODE.SUCCESS
+      return { code, message: RESPONSE_MESSAGE[code], data }
     })
-    .catch(err => ({ code: '-1', message: err.message, data: {} }))
+    .catch(err => ({ code: CODE.ERROR, message: err.message, data: {} }))
   }
 
   //Compat
@@ -209,9 +211,10 @@ export default class Alipay {
     })
     .then(data => {
       data = data + '&sign=' + encodeURIComponent(sign)
-      return { code: 0, message: RESPONSE_MESSAGE[0], data }
+      const code = CODE.SUCCESS
+      return { code, message: RESPONSE_MESSAGE[code], data }
     })
-    .catch(err => ({ code: '-1', message: err.message, data: {} }))    
+    .catch(err => ({ code: CODE.ERROR, message: err.message, data: {} }))    
   }
 
   queryOrder (publicParams, basicParams = {}) {
@@ -225,7 +228,7 @@ export default class Alipay {
         return this.makeRequest(params)
       })
     })
-    .catch(err => ({ code: '-1', message: err.message, data: {} }))    
+    .catch(err => ({ code: CODE.ERROR, message: err.message, data: {} }))    
   }
 
   cancelOrder (publicParams, basicParams = {}) {
