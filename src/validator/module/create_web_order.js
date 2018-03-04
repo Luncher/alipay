@@ -19,6 +19,10 @@ export default {
     type: 'string',
     maxLength: 6
   },
+  time_expire: {
+    type: 'string',
+    maxLength: 32
+  },
   total_amount: {
     type: 'string',
     required: true,
