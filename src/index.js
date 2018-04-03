@@ -84,7 +84,7 @@ export default class Alipay {
   }
 
   makeRequest(params, options = {}) {
-    const httpclient = urllib.create();
+    const httpclient = urllib.create()
     return httpclient.request(GETWAY, Object.assign({}, {
       data: params,
       dataType: 'json',
