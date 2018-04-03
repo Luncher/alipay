@@ -13,6 +13,7 @@ import TradePrecreate from './module/trade_precreate'
 import TradeRefundQuery from './module/trade_refund_query'
 import BillDownloadQuery from './module/bill_download_query'
 import ToaccountTransfer from './module/toaccount_transfer'
+import QueryTransOrder from './module/query_trans_order';
 
 const Basic = {
   app_id: {
@@ -80,4 +81,5 @@ export default {
   TradeRefundQuery,
   BillDownloadQuery,
   ToaccountTransfer,
+  QueryTransOrder
 }

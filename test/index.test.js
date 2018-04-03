@@ -5,6 +5,7 @@ import sinon from 'sinon'
 import urllib from 'urllib'
 import Alipay from '~/index'
 
+
 const read = filename => {
   return fs.readFileSync(path.resolve(__dirname, filename))
 }
@@ -25,10 +26,10 @@ describe('ALIPAY unit test', function () {
       total_amount: '100'
     }
     return service.createAppOrder(data)
-    .then(result => {
-      assert(result.code == 0, result.message)
-      assert(result.message == 'success', result.message)
-    })
+      .then(result => {
+        assert(result.code == 0, result.message)
+        assert(result.message == 'success', result.message)
+      })
   })
 
   // it('should allow create query order', () => {
@@ -56,37 +57,52 @@ describe('ALIPAY unit test', function () {
   //   })
   // })
 
-  it ('should reject makeNotifyResponse', () => {
-    return service.makeNotifyResponse({})
-    .then(result => {
-      assert(result.code == -1, result.message)
-    })
-  })
+  // it('should reject makeNotifyResponse', () => {
+  //   return service.makeNotifyResponse({})
+  //     .then(result => {
+  //       assert(result.code == -1, result.message)
+  //     })
+  // })
+  //
+  // it('should allow toaccountTransfer', () => {
+  //   const sandbox = sinon.createSandbox()
+  //   sandbox.stub(urllib, "create").callsFake(function () {
+  //     return {
+  //       request: () => Promise.resolve({
+  //         data: {
+  //           "alipay_fund_trans_toaccount_transfer_response": {
+  //             "code": "10000",
+  //             "msg": "Success",
+  //             "out_biz_no": "3142321423432",
+  //             "order_id": "20160627110070001502260006780837",
+  //             "pay_date": "2013-01-01 08:08:08"
+  //           },
+  //           "sign": "ERITJKEIJKJHKKKKKKKHJEREEEEEEEEEEE"
+  //         }
+  //       })
+  //     }
+  //   })
+  //   return service.toaccountTransfer({
+  //     out_biz_no: "1234",
+  //     payee_type: 'ALIPAY_LOGONID',
+  //     payee_account: "user666",
+  //     amount: "100"
+  //   }, {})
+  //     .then(result => {
+  //       sandbox.verifyAndRestore()
+  //     })
+  // });
 
-  it('should allow toaccountTransfer', () => {
-    const sandbox = sinon.createSandbox()
-    sandbox.stub(urllib, "create").callsFake(function() {
-      return {
-        request: () => Promise.resolve({ data: {
-          "alipay_fund_trans_toaccount_transfer_response": {
-            "code": "10000",
-            "msg": "Success",
-            "out_biz_no": "3142321423432",
-            "order_id": "20160627110070001502260006780837",
-            "pay_date": "2013-01-01 08:08:08"
-          },
-          "sign": "ERITJKEIJKJHKKKKKKKHJEREEEEEEEEEEE"
-        }})
-      }
-    })
-    return service.toaccountTransfer({
-      out_biz_no: "1234",
-      payee_type: 'ALIPAY_LOGONID',
-      payee_account: "user666",
-      amount: "100"
-    }, {})
-    .then(result => {
-      sandbox.verifyAndRestore()      
-    })
+  it('should allow queryTransferOrder  ', () => {
+    const data = {
+      out_biz_no: '3142321423432',
+      order_id: '20160627110070001502260006780837'
+    }
+    return service.queryTransferOrder(data).then(result => {
+      assert(result["code"]==-1);
+      assert(result.message == 'error', result.message);
+      assert(result.data.code === '40004');
+      assert(result.data.sub_msg === '转账订单不存在');
+    });
   })
 })

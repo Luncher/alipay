@@ -344,6 +344,28 @@ return service.toaccountTransfer(params)
 
 ---
 
+
+### 查询转账订单接口`queryTransferOrder`
+
+[接口文档](https://docs.open.alipay.com/api_28/alipay.fund.trans.order.query/)
+
+```javascript
+const data = {
+  out_biz_no: '3142321423432',
+  order_id: '20160627110070001502260006780837'
+}
+
+return service.queryTransferOrder(data).then(result=>{
+  assert(result["code"]==-1);
+  assert(result.message == 'error', result.message);
+  assert(result.data.code === '40004');
+  assert(result.data.sub_msg === '转账订单不存在');
+})
+
+```
+
+---
+
 ## 功能列表
 
 - [x] 创建订单
@@ -358,6 +380,7 @@ return service.toaccountTransfer(params)
 - [x] 关闭交易
 - [x] 账单下载地址查询
 - [x] 单笔转账到支付宝账户
+- [x] 查询转账订单接口
 
 ---
 

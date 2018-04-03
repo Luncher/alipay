@@ -1,29 +1,29 @@
 import Preset from './preset'
 import makeDebug from 'debug'
 import Promise from 'bluebird'
-import { METHOD_TYPES } from '~/config'
+import {METHOD_TYPES} from '~/config'
 
 const debug = makeDebug('alipay-mobile:parser')
 
 class Validator {
-  constructor (presets, params) {
+  constructor(presets, params) {
     this.result = {}
     this.invalid = false
     this.message = 'Success'
     this.params = params
     this.presets = presets
     this.paramsKeys = Object.keys(params)
-    this.presetKeys = Object.keys(presets)  
+    this.presetKeys = Object.keys(presets)
   }
 
-  validateRequired (checker, key, data) {
+  validateRequired(checker, key, data) {
     if (checker.required && !data && !checker.default) {
       this.invalid = true
       this.message = `${key} is required. But Not Found In params.`
     }
   }
 
-  validateEnum (checker, key, data) {
+  validateEnum(checker, key, data) {
     if (checker.type !== 'enum' || !data) return
     const items = Array.isArray(data) ? data : data.split(',')
 
@@ -31,13 +31,13 @@ class Validator {
       const it = items[i]
       if (it && checker.enums.indexOf(it) === -1) {
         this.invalid = true
-        this.message = `key: ${key}, value: ${data}. Not Found In : ${checker.enums.join(',')}`     
-        break               
+        this.message = `key: ${key}, value: ${data}. Not Found In : ${checker.enums.join(',')}`
+        break
       }
     }
   }
 
-  validateLength (checker, key, data) {
+  validateLength(checker, key, data) {
     if (!data) return
     if ((key in this.params) && !data.length) {
       this.invalid = true
@@ -48,14 +48,14 @@ class Validator {
     }
   }
 
-  validateField (checker, key) {
+  validateField(checker, key) {
     if (this.presetKeys.indexOf(key) === -1) {
       this.invalid = true
       this.message = `${key} Parameters should not appear`
     }
   }
 
-  normalize (checker, key, data) {
+  normalize(checker, key, data) {
     if (!data && checker.default) {
       if (typeof checker.default === 'function') {
         data = checker.default()
@@ -70,7 +70,7 @@ class Validator {
     return data
   }
 
-  validate (key) {
+  validate(key) {
     let data = this.params[key]
     const checker = this.presets[key]
     debug("key: ", key)
@@ -81,9 +81,9 @@ class Validator {
     if (this.invalid) return this.invalid
     data = this.normalize(checker, key, data)
     this.validateEnum(checker, key, data)
-    if (this.invalid) return this.invalid     
+    if (this.invalid) return this.invalid
     this.validateLength(checker, key, data)
-    if (this.invalid) return this.invalid    
+    if (this.invalid) return this.invalid
     this.validateField(checker, key, data)
     if (this.invalid) return this.invalid
     if (data) {
@@ -92,7 +92,7 @@ class Validator {
     return this.invalid
   }
 
-  run () {
+  run() {
     return new Promise((resolve, reject) => {
       for (let i = 0, len = this.presetKeys.length; i < len; i++) {
         const key = this.presetKeys[i]
@@ -105,13 +105,13 @@ class Validator {
   }
 }
 
-export function validateBasicParams (params) {
+export function validateBasicParams(params) {
   debug("params:", params)
   const instance = new Validator(Preset.Basic, params)
   return instance.run()
 }
 
-export function validateAPIParams (method, params) {
+export function validateAPIParams(method, params) {
   let instance
 
   switch (method) {
@@ -124,11 +124,11 @@ export function validateAPIParams (method, params) {
       break
     }
     case METHOD_TYPES.CREATE_PAGE_ORDER: {
-      instance = new Validator(Preset.CreatePageOrder, params)      
+      instance = new Validator(Preset.CreatePageOrder, params)
       break
     }
     case METHOD_TYPES.QUERY_ORDER: {
-      instance = new Validator(Preset.QueryOrder, params)    
+      instance = new Validator(Preset.QueryOrder, params)
       break
     }
     case METHOD_TYPES.CANCEL_ORDER: {
@@ -137,11 +137,11 @@ export function validateAPIParams (method, params) {
     }
     case METHOD_TYPES.VERIFY_PAYMENT: {
       instance = new Validator(Preset.VerifyPayment, params)
-      break       
+      break
     }
     case METHOD_TYPES.NOTIFY_RESPONSE: {
       instance = new Validator(Preset.Notify, params)
-      break   
+      break
     }
     case METHOD_TYPES.TRADE_CLOSE: {
       instance = new Validator(Preset.TradeClose, params)
@@ -168,17 +168,21 @@ export function validateAPIParams (method, params) {
       break
     }
     case METHOD_TYPES.FUND_TRANS_TOACCOUNT_TRANSFER: {
-      instance = new Validator(Preset.ToaccountTransfer, params)      
+      instance = new Validator(Preset.ToaccountTransfer, params)
+      break
+    }
+    case METHOD_TYPES.FUND_TRANS_ORDER_QUERY: {
+      instance = new Validator(Preset.QueryTransOrder, params)
       break
     }
     default: {
       throw new Error(`Parser Unknow method type:${method}`)
     }
   }
-  return instance.run()  
+  return instance.run()
 }
 
 export default {
   validateAPIParams,
-  validateBasicParams  
+  validateBasicParams
 }
