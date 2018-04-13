@@ -53,5 +53,13 @@ export default {
   store_id: {
     type: 'string',
     maxLength: 32
+  },
+  qr_pay_mode: {
+    type: 'string',
+    maxLength: 2
+  },
+  qrcode_width: {
+    type: 'string',
+    maxLength: 4
   }
 }
