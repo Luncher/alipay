@@ -32,8 +32,8 @@ export default class Alipay {
         + "\n-----END PUBLIC KEY-----"
     }
     if (this.privKey.indexOf('BEGIN RSA PRIVATE KEY') === -1 && this.privKey.indexOf('BEGIN PRIVATE KEY') === -1) {
-      this.privKey = ASN1_PRI_KEY_BEGIN + this.privKey
-        + ASN1_PRI_KEY_EN
+      this.privKey = config.ASN1_PRI_KEY_BEGIN + this.privKey
+        + config.ASN1_PRI_KEY_END
     }
   }
 

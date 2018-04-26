@@ -31,6 +31,6 @@ export default {
     RSA: "RSA-SHA1",
     RSA2: "RSA-SHA256"
   },
-  ASN1_PRI_KEY_HEADER_BEGIN: '-----BEGIN RSA PRIVATE KEY-----\n',
-  ASN1_PRI_KEY_HEADER_END: '-----END RSA PRIVATE KEY-----'
+  ASN1_PRI_KEY_BEGIN: '-----BEGIN RSA PRIVATE KEY-----\n',
+  ASN1_PRI_KEY_END: '-----END RSA PRIVATE KEY-----'
 }
