@@ -17,7 +17,40 @@ const options = {
 
 const service = new Alipay(options)
 
+function testCreateAppOrderOk(options) {
+  const vService = new Alipay(options)
+
+  const data = {
+    subject: '辣条',
+    out_trade_no: '1232423',
+    total_amount: '100'
+  }
+  return vService.createAppOrder(data)
+  .then(result => {
+    assert(result.code == 0, result.message)
+    assert(result.message == 'success', result.message)
+  })
+}
+
 describe('ALIPAY unit test', function () {
+  it('should use private key with ras header', () => {
+    const vOptions = {
+      app_id: '2016080100137766',
+      appPrivKeyFile: read('./keys/app_priv_key_with_rsa_head.pem'),
+      alipayPubKeyFile: read('./keys/alipay_public_key.pem')
+    }
+    return testCreateAppOrderOk(vOptions);
+  })
+
+  it('should use private key with header', () => {
+    const vOptions = {
+      app_id: '2016080100137766',
+      appPrivKeyFile: read('./keys/app_priv_key_with_head.pem'),
+      alipayPubKeyFile: read('./keys/alipay_public_key.pem')
+    }
+    return testCreateAppOrderOk(vOptions);
+  })
+
   it('should allow create order', () => {
     const data = {
       subject: '辣条',
@@ -86,7 +119,7 @@ describe('ALIPAY unit test', function () {
       amount: "100"
     }, {})
     .then(result => {
-      sandbox.verifyAndRestore()      
+      sandbox.verifyAndRestore()
     })
   })
 })
