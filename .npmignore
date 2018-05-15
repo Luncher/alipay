@@ -1,5 +1,6 @@
 src/**
 test/**
+typing-test/**
 boqii-test/**
 .babelrc
 .eslint*

@@ -1,0 +1,13 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "target": "es2015",
+    "module": "commonjs",
+    "noEmit": true,
+    "noImplicitAny": true
+  },
+  "files": [
+    "../src/index.d.ts",
+    "./alipay-tests.ts"
+  ]
+}
