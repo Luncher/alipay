@@ -39,7 +39,7 @@ const Alipay = require('alipay-mobile')
 const read = filename => {
   return fs.readFileSync(path.resolve(__dirname, filename))
 }
-
+//notify_url: 异步通知url
 //app_id: 开放平台 appid
 //appPrivKeyFile: 你的应用私钥
 //alipayPubKeyFile: 蚂蚁金服公钥
