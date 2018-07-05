@@ -31,9 +31,9 @@ export default class Alipay {
       this.publicKey = "-----BEGIN PUBLIC KEY-----\n" + this.publicKey
         + "\n-----END PUBLIC KEY-----"
     }
-    if (this.privKey.indexOf('BEGIN RSA PRIVATE KEY') === -1) {
-      this.privKey = "-----BEGIN RSA PRIVATE KEY-----\n" + this.privKey
-        + "\n-----END RSA PRIVATE KEY-----"
+    if (this.privKey.indexOf('BEGIN RSA PRIVATE KEY') === -1 && this.privKey.indexOf('BEGIN PRIVATE KEY') === -1) {
+      this.privKey = config.ASN1_PRI_KEY_BEGIN + this.privKey
+        + config.ASN1_PRI_KEY_END
     }
   }
 
@@ -62,12 +62,12 @@ export default class Alipay {
 
   makeResponse (response) {
     const isSucceed = response => {
-      return ['10000'].indexOf(response.code) !== -1    
+      return ['10000'].indexOf(response.code) !== -1
     }
     const isPermissionDenied = response => {
-      return ['40006'].indexOf(response.code) !== -1    
+      return ['40006'].indexOf(response.code) !== -1
     }
-    const result = {}    
+    const result = {}
     const respType = utils.responseType(response)
     const respData = response[respType]
     if (isSucceed(respData)) {
@@ -87,7 +87,7 @@ export default class Alipay {
     const httpclient = urllib.create()
     return httpclient.request(GETWAY, Object.assign({}, {
       data: params,
-      dataType: 'json',      
+      dataType: 'json',
       dataAsQueryString: true
     }, options))
     .then(resp => this.makeResponse(resp.data))
@@ -110,7 +110,7 @@ export default class Alipay {
         return { code, message: RESPONSE_MESSAGE[code] }
       }
     })
-    .catch(err => ({ code: '-1', message: err.message, data: {} }))    
+    .catch(err => ({ code: '-1', message: err.message, data: {} }))
   }
 
   makeNotifyResponse (params) {
@@ -133,17 +133,17 @@ export default class Alipay {
     return this.createWebOrder(publicParams, basicParams)
     .then(result => {
       if (result.code === 0) {
-        result.data = GETWAY + '?' + result.data        
+        result.data = GETWAY + '?' + result.data
       }
       return result
     })
   }
-  
+
   createPageOrderURL (publicParams, basicParams = {}) {
     return this.createPageOrder(publicParams, basicParams)
     .then(result => {
       if (result.code === 0) {
-        result.data = GETWAY + '?' + result.data        
+        result.data = GETWAY + '?' + result.data
       }
       return result
     })
@@ -211,7 +211,7 @@ export default class Alipay {
       data = data + '&sign=' + encodeURIComponent(sign)
       return { code: 0, message: RESPONSE_MESSAGE[0], data }
     })
-    .catch(err => ({ code: '-1', message: err.message, data: {} }))    
+    .catch(err => ({ code: '-1', message: err.message, data: {} }))
   }
 
   queryOrder (publicParams, basicParams = {}) {
@@ -225,7 +225,7 @@ export default class Alipay {
         return this.makeRequest(params)
       })
     })
-    .catch(err => ({ code: '-1', message: err.message, data: {} }))    
+    .catch(err => ({ code: '-1', message: err.message, data: {} }))
   }
 
   cancelOrder (publicParams, basicParams = {}) {
