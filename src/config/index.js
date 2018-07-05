@@ -8,6 +8,7 @@ export default {
     'alipay.trade.query': '订单查询',
     'alipay.trade.refund': '交易退款',
     'alipay.trade.cancel': '取消订单',
+    'alipay.trade.precreate': '预创建订单',
     'alipay.trade.close': '关闭交易',
     'alipay.trade.create': '创建交易',
     'alipay.trade.order.settle': '交易结算',
