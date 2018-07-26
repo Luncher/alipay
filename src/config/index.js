@@ -15,6 +15,7 @@ export default {
     'alipay.trade.fastpay.refund.query': '交易退款查询',
     'alipay.trade.app.pay': '生成创建订单所需参数',
     'alipay.fund.trans.toaccount.transfer': '单笔转账到支付宝账户接口',
+    'alipay.data.dataservice.bill.downloadurl.query': '查询账单下载地址接口',
     'async.notify': '异步通知' // 自定义
   },
   ALIPAY_GETWAY_MESSAGE: {
