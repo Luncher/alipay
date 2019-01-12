@@ -1,4 +1,4 @@
-import * as utils from '../utils'
+import { AlipayPaymentResponseCode } from '../../config/'
 
 export default {
   memo: {
@@ -9,6 +9,6 @@ export default {
   },
   resultStatus: {
     type: 'enum',
-    enums: Object.keys(utils.ALIPAY_PAYMENT_MESSAGE)
+    enums: AlipayPaymentResponseCode
   }
 }

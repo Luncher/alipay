@@ -1,17 +1,19 @@
 import Preset from './preset'
 import makeDebug from 'debug'
-import Promise from 'bluebird'
-import { METHOD_TYPES } from '~/config'
+import { MethodType } from '../config'
 
 const debug = makeDebug('alipay-mobile:parser')
 
 class Validator {
+  result = {}
+  params: any = null
+  presets: any = null
+  paramsKeys: any = null
+  presetKeys: any = null
+  invalid: boolean = false
+  message: string = 'Success'
+
   constructor (presets, params) {
-    this.result = {}
-    this.invalid = false
-    this.message = 'Success'
-    this.params = params
-    this.presets = presets
     this.paramsKeys = Object.keys(params)
     this.presetKeys = Object.keys(presets)  
   }
@@ -37,7 +39,7 @@ class Validator {
     }
   }
 
-  validateLength (checker, key, data) {
+  validateLength (checker, key: string, data) {
     if (!data) return
     if ((key in this.params) && !data.length) {
       this.invalid = true
@@ -48,14 +50,14 @@ class Validator {
     }
   }
 
-  validateField (checker, key) {
+  validateField (_, key: string) {
     if (this.presetKeys.indexOf(key) === -1) {
       this.invalid = true
       this.message = `${key} Parameters should not appear`
     }
   }
 
-  normalize (checker, key, data) {
+  normalize (checker, _, data) {
     if (!data && checker.default) {
       if (typeof checker.default === 'function') {
         data = checker.default()
@@ -70,7 +72,7 @@ class Validator {
     return data
   }
 
-  validate (key) {
+  validate (key: string) {
     let data = this.params[key]
     const checker = this.presets[key]
     debug("key: ", key)
@@ -84,7 +86,7 @@ class Validator {
     if (this.invalid) return this.invalid     
     this.validateLength(checker, key, data)
     if (this.invalid) return this.invalid    
-    this.validateField(checker, key, data)
+    this.validateField(checker, key)
     if (this.invalid) return this.invalid
     if (data) {
       this.result[key] = data
@@ -115,59 +117,59 @@ export function validateAPIParams (method, params) {
   let instance
 
   switch (method) {
-    case METHOD_TYPES.CREATE_WEB_ORDER: {
+    case MethodType.CREATE_WEB_ORDER: {
       instance = new Validator(Preset.CreateWebOrder, params)
       break
     }
-    case METHOD_TYPES.CREATE_APP_ORDER: {
+    case MethodType.CREATE_APP_ORDER: {
       instance = new Validator(Preset.CreateAppOrder, params)
       break
     }
-    case METHOD_TYPES.CREATE_PAGE_ORDER: {
+    case MethodType.CREATE_PAGE_ORDER: {
       instance = new Validator(Preset.CreatePageOrder, params)      
       break
     }
-    case METHOD_TYPES.QUERY_ORDER: {
+    case MethodType.QUERY_ORDER: {
       instance = new Validator(Preset.QueryOrder, params)    
       break
     }
-    case METHOD_TYPES.CANCEL_ORDER: {
+    case MethodType.CANCEL_ORDER: {
       instance = new Validator(Preset.CancelOrder, params)
       break
     }
-    case METHOD_TYPES.VERIFY_PAYMENT: {
+    case MethodType.VERIFY_PAYMENT: {
       instance = new Validator(Preset.VerifyPayment, params)
       break       
     }
-    case METHOD_TYPES.NOTIFY_RESPONSE: {
+    case MethodType.NOTIFY_RESPONSE: {
       instance = new Validator(Preset.Notify, params)
       break   
     }
-    case METHOD_TYPES.TRADE_CLOSE: {
+    case MethodType.TRADE_CLOSE: {
       instance = new Validator(Preset.TradeClose, params)
       break
     }
-    case METHOD_TYPES.TRADE_REFUND: {
+    case MethodType.TRADE_REFUND: {
       instance = new Validator(Preset.TradeRefund, params)
       break
     }
-    case METHOD_TYPES.TRADE_REFUND_QUERY: {
+    case MethodType.TRADE_REFUND_QUERY: {
       instance = new Validator(Preset.TradeRefundQuery, params)
       break
     }
-    case METHOD_TYPES.BILL_DOWNLOAD_QUERY: {
+    case MethodType.BILL_DOWNLOAD_QUERY: {
       instance = new Validator(Preset.BillDownloadQuery, params)
       break
     }
-    case METHOD_TYPES.TRADE_PRECREATE: {
+    case MethodType.TRADE_PRECREATE: {
       instance = new Validator(Preset.TradePrecreate, params)
       break
     }
-    case METHOD_TYPES.TRADE_SETTLE: {
+    case MethodType.TRADE_SETTLE: {
       instance = new Validator(Preset.TradeSettle, params)
       break
     }
-    case METHOD_TYPES.FUND_TRANS_TOACCOUNT_TRANSFER: {
+    case MethodType.FUND_TRANS_TOACCOUNT_TRANSFER: {
       instance = new Validator(Preset.ToaccountTransfer, params)      
       break
     }

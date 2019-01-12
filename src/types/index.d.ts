@@ -1,0 +1,32 @@
+import { AlipayOption } from './config/api';
+export default class Alipay {
+    privKey: string;
+    publicKey: string;
+    options: AlipayOption;
+    constructor(options: AlipayOption);
+    readonly appId: string;
+    santizeOptions(options: AlipayOption): void;
+    normalizeKeys(options: AlipayOption): void;
+    validateBasicParams(method: any, basicParams: any): any;
+    validateAPIParams(method: any, options: any): any;
+    validateParams(method: any, publicParams: any, basicParams: any): any;
+    makeResponse(response: any): {};
+    makeRequest(params: any, options?: {}): any;
+    verifyPayment(params: any): any;
+    makeNotifyResponse(params: any): any;
+    createWebOrderURL(publicParams: any, basicParams?: {}): any;
+    createPageOrderURL(publicParams: any, basicParams?: {}): any;
+    createPageOrder(publicParams: any, basicParams?: {}): any;
+    createWebOrder(publicParams: any, basicParams?: {}): any;
+    createOrder(publicParams: any, basicParams?: {}): any;
+    createAppOrder(publicParams: any, basicParams?: {}): any;
+    queryOrder(publicParams: any, basicParams?: {}): any;
+    cancelOrder(publicParams: any, basicParams?: {}): any;
+    tradeClose(publicParams: any, basicParams?: {}): any;
+    tradeRefund(publicParams: any, basicParams?: {}): any;
+    tradeRefundQuery(publicParams: any, basicParams?: {}): any;
+    billDownloadQuery(publicParams: any, basicParams?: {}): any;
+    tradePrecreate(publicParams: any, basicParams?: {}): any;
+    tradeSettle(publicParams: any, basicParams?: {}): any;
+    toaccountTransfer(publicParams: any, basicParams?: {}): any;
+}

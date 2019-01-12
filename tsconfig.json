@@ -1,0 +1,25 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "types": ["node"],
+    "lib":["es2015"],
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "sourceMap":true,
+    "removeComments": true,
+    "declaration": true,
+    "declarationDir": "./types/",
+    "target": "es5",
+    "noUnusedLocals":true,
+    "noUnusedParameters": true,
+    "outDir": "./dist/",
+    "strictNullChecks":true
+  },
+  "include": [
+    "src/**/*"
+  ],
+  "exclude": [
+    "node_modules",
+    "**/*.spec.ts"
+  ]
+}

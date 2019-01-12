@@ -219,6 +219,8 @@ return service.cancelOrder({ out_trade_no: outTradeNo })
 
 ### 验证支付结果`verifyPayment`
 
+[App支付同步通知参数校验](https://docs.open.alipay.com/204/105302)
+
 ```javascript
 const params = {
   memo: "xxxx",

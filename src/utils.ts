@@ -1,5 +1,5 @@
-import crypto from 'crypto'
-import config from './config'
+import * as crypto from 'crypto'
+import * as config from './config'
 
 export function makeSignStr(params, omit = ['sign']) {
   return Object.keys(params)
@@ -13,8 +13,8 @@ export function makeSignStr(params, omit = ['sign']) {
   .join('&').trim()
 }
 
-export function signAlgorithm (signType) {
-  return config.ALIPAY_ALGORITHM_MAPPING[signType]
+export function signAlgorithm (signType: config.AlipayAlgorithm): string {
+  return config.AlipayAlgorithm[signType]
 }
 
 export function makeSign (privKey, params) {
@@ -25,7 +25,7 @@ export function makeSign (privKey, params) {
   return signer.sign(privKey, "base64")
 }
 
-export function verifySign (publicKey, response, omit, options) {
+export function verifySign (publicKey, response, omit, options): boolean {
   const type = responseType(response)
   if (!type || !response.sign) {
     return false
@@ -40,9 +40,10 @@ export function verifySign (publicKey, response, omit, options) {
   }
 }
 
-export function responseType (response) {
-  const type = Object.keys(config.ALIPAY_API_LIST)
+export function responseType (response): string {
+  const type = Object.keys(config.AlipayAPIList)
     .map(name => name.replace(/\./g, '_'))
     .find(api => `${api}_response` in response)
   if (type) return type + '_response'
+  throw new Error("Not Found responseType: " + response)
 }
