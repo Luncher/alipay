@@ -26,7 +26,7 @@ export declare enum AlipayNormalResponseCode {
     PERMISSION_DENIED = 40006
 }
 export declare const alipayResponseMessage: {
-    '0': string;
+    0: string;
     '-1': string;
     '-2': string;
     10000: string;
@@ -109,14 +109,18 @@ export interface AlipayPublicArgs {
     biz_content: string;
 }
 export declare type AlipayResponse = AlipayPublicResponse | AlipayTradeAppPayResponse;
-export declare type AlipayResponseType = 'alipay_trade_query_response' | 'alipay_trade_refund_response' | 'alipay_trade_cancel_response' | 'alipay_trade_precreate_response' | 'alipay_trade_close_response' | 'alipay_trade_create_response' | 'alipay_trade_order_settle_response' | 'alipay_trade_fastpay_refund_query_response' | 'alipay_trade_app_pay_response' | 'alipay_fund_trans_toaccount.transfer_response' | 'alipay_data_dataservice_bill_downloadurl_query_response' | 'async_notify_response';
-export declare type AlipayPublicResponse = {
+export declare type AlipayResponseType = 'alipay_trade_query_response' | 'alipay_trade_refund_response' | 'alipay_trade_cancel_response' | 'alipay_trade_precreate_response' | 'alipay_trade_close_response' | 'alipay_trade_create_response' | 'alipay_trade_order_settle_response' | 'alipay_trade_fastpay_refund_query_response' | 'alipay_trade_app_pay_response' | 'alipay_fund_trans_toaccount_transfer_response' | 'alipay_data_dataservice_bill_downloadurl_query_response' | 'async_notify_response';
+export declare type AlipayResponseTypeMap = {
+    [key in AlipayResponseType]: string;
+};
+export declare type AlipayPublicResponse = AlipayPublicResponseImpl & AlipayResponseTypeMap;
+export interface AlipayPublicResponseImpl {
     code: ApiResponseCode;
     msg: string;
     sub_code?: string;
     sub_msg?: string;
     sign: string;
-};
+}
 export interface AlipayCreateOrderArgs {
     body?: string;
     subject: string;
@@ -160,8 +164,8 @@ export interface AlipayTradeRefundArgs {
     operator_id?: string;
     store_id?: string;
     terminal_id?: string;
-    goods_detail?: any;
-    refund_royalty_parameters?: any;
+    goods_detail?: Map<string, string | number>[];
+    refund_royalty_parameters?: Map<string, string | number>[];
     org_pid?: string;
 }
 export interface AlipayTradeRefundQueryArgs {
@@ -180,7 +184,7 @@ export interface AlipayTradePrecreateArgs {
     total_amount: number;
     discountable_amount?: number;
     subject: string;
-    goods_detail?: any;
+    goods_detail?: Map<string, string | number>[];
     body?: string;
     operator_id?: string;
     store_id?: string;
@@ -275,7 +279,6 @@ export declare enum AlipayNotifyResult {
     SUCCESS = "success",
     FAILURE = "failure"
 }
-export declare type AlipayAlgorithmSignType = 'RSA' | 'RSA2';
 export declare enum AlipayAlgorithm {
     RSA = "RSA-SHA1",
     RSA2 = "RSA-SHA256"

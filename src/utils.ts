@@ -13,7 +13,7 @@ export function makeSignStr(params: object, omit = ['sign']) {
   .join('&').trim()
 }
 
-export function getSignAlgorithm (signType: config.AlipayAlgorithmSignType): config.AlipayAlgorithm {
+export function getSignAlgorithm (signType: config.AlipaySignType): config.AlipayAlgorithm {
   return config.AlipayAlgorithm[signType]
 }
 
@@ -28,13 +28,11 @@ export function makeSign (privKey: string, params: config.AlipayPublicArgs) {
 export function verifySign(
   publicKey: string, response: config.AlipayVerifySignArgs,
   omit: string[], options: config.AlipayNotifyArgs): boolean {
-  const respType = getResponseType(response)
-  if (!respType || !response.sign) {
+  if (!response.async_notify_response || !response.sign) {
     return false
   } else {
-    // const sign = Base64.decode(response.sign)
     const sign = response.sign
-    const resp = makeSignStr(response[respType], omit)
+    const resp = makeSignStr(response.async_notify_response, omit)
     const algorithm = getSignAlgorithm(options.sign_type)
     const verify = crypto.createVerify(algorithm)
     verify.update(resp, <crypto.Utf8AsciiLatin1Encoding>options.charset)

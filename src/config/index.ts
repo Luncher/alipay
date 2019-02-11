@@ -30,7 +30,7 @@ export enum AlipayNormalResponseCode {
 }
 
 export const alipayResponseMessage = {
-  '0':   '请求成功',
+  0:   '请求成功',
   '-1':  '异常',
   '-2':  '签名错误',
   10000: '接口调用成功',
@@ -142,6 +142,20 @@ export interface AlipayPublicArgs {
 
 export type AlipayResponse = AlipayPublicResponse | AlipayTradeAppPayResponse
 
+// export enum AlipayResponseType {
+//   alipay_trade_query_response = 'alipay_trade_query_response',
+//   alipay_trade_refund_response = 'alipay_trade_refund_response',
+//   alipay_trade_cancel_response = 'alipay_trade_cancel_response',
+//   alipay_trade_precreate_response = 'alipay_trade_precreate_response',
+//   alipay_trade_close_response = 'alipay_trade_close_response',
+//   alipay_trade_create_response = 'alipay_trade_create_response',
+//   alipay_trade_order_settle_response = 'alipay_trade_order_settle_response',
+//   alipay_trade_fastpay_refund_query_response = 'alipay_trade_fastpay_refund_query_response',
+//   alipay_trade_app_pay_response = 'alipay_trade_app_pay_response',
+//   alipay_fund_trans_toaccount_transfer_response = 'alipay_fund_trans_toaccount_transfer_response',
+//   alipay_data_dataservice_bill_downloadurl_query_response = 'alipay_data_dataservice_bill_downloadurl_query_response',
+//   async_notify_response:
+// }
 export type AlipayResponseType =
   | 'alipay_trade_query_response'
   | 'alipay_trade_refund_response'
@@ -152,17 +166,23 @@ export type AlipayResponseType =
   | 'alipay_trade_order_settle_response'
   | 'alipay_trade_fastpay_refund_query_response'
   | 'alipay_trade_app_pay_response'
-  | 'alipay_fund_trans_toaccount.transfer_response'
+  | 'alipay_fund_trans_toaccount_transfer_response'
   | 'alipay_data_dataservice_bill_downloadurl_query_response'
   | 'async_notify_response'
 
+export type AlipayResponseTypeMap = {
+  [key in AlipayResponseType]: string
+}
+
+export type AlipayPublicResponse = AlipayPublicResponseImpl & AlipayResponseTypeMap
+
 //支付宝接口公共响应参数
-export type AlipayPublicResponse = {
-  code: ApiResponseCode;
-  msg: string;
-  sub_code?: string;
-  sub_msg?: string;
-  sign: string;
+export interface AlipayPublicResponseImpl {
+  code: ApiResponseCode,
+  msg: string,
+  sub_code?: string,
+  sub_msg?: string,
+  sign: string
 }
 
 //创建订单参数
@@ -188,15 +208,15 @@ export interface AlipayCreateOrderArgs {
 
 //查询订单参数
 export interface AlipayQueryOrderArgs {
-  out_trade_no?: string,//订单支付时传入的商户订单号,和支付宝交易号不能同时为空
-  trade_no?: string,    //支付宝交易号，和商户订单号不能同时为空
-  org_pid?: string,     //银行间联模式下有用，其它场景请不要使用
+  out_trade_no?: string,  //订单支付时传入的商户订单号,和支付宝交易号不能同时为空
+  trade_no?: string,      //支付宝交易号，和商户订单号不能同时为空
+  org_pid?: string,       //银行间联模式下有用，其它场景请不要使用
 }
 
 //取消订单
 export interface AlipayCancelOrderArgs {
-  out_trade_no?: string,//订单支付时传入的商户订单号,和支付宝交易号不能同时为空
-  trade_no?: string     //支付宝交易号，和商户订单号不能同时为空
+  out_trade_no?: string,  //订单支付时传入的商户订单号,和支付宝交易号不能同时为空
+  trade_no?: string       //支付宝交易号，和商户订单号不能同时为空
 }
 
 //统一收单交易关闭接口
@@ -217,8 +237,8 @@ export interface AlipayTradeRefundArgs {
   operator_id?: string,     //商户的操作员编号
   store_id?: string,        //商户的门店编号
   terminal_id?: string,     //商户的终端编号
-  goods_detail?: any,       //退款包含的商品列表信息
-  refund_royalty_parameters?: any,//退分账明细信息
+  goods_detail?: Map<string, string | number>[],       //退款包含的商品列表信息
+  refund_royalty_parameters?: Map<string, string | number>[], //退分账明细信息
   org_pid?: string          //银行间联模式下有用，其它场景请不要使用
 }
 
@@ -243,10 +263,10 @@ export interface AlipayTradePrecreateArgs {
   total_amount: number, //订单总金额
   discountable_amount?: number, //可打折金额
   subject: string,    //订单标题
-  goods_detail?: any,  //订单包含的商品列表信息
-  body?: string,       //对交易或商品的描述
-  operator_id?: string,//商户操作员编号
-  store_id?: string,   //商户门店编号
+  goods_detail?: Map<string, string | number>[],  //订单包含的商品列表信息
+  body?: string,        //对交易或商品的描述
+  operator_id?: string, //商户操作员编号
+  store_id?: string,    //商户门店编号
   disable_pay_channels?: string,    //禁用渠道
   enable_pay_channels?: string,     //可用渠道，用户只能在指定渠道范围内支付
   terminal_id?: string,             //商户机具终端编号
@@ -272,8 +292,8 @@ export interface AlipayToaccountTransferArgs {
   payee_type: string, //收款方账户类型
   payee_account: string, //收款方账户
   amount: number, //转账金额
-  payer_show_name?: string,//付款方姓名
-  payee_real_name?: string,//收款方真实姓名
+  payer_show_name?: string, //付款方姓名
+  payee_real_name?: string, //收款方真实姓名
   remark?: string//转账备注
 }
 
@@ -328,7 +348,7 @@ export enum MethodType {
 
 export enum GateWay {
   ALIPAY_GETWAY     = 'https://openapi.alipay.com/gateway.do',
-  ALIPAY_DEV_GETWAY = 'https://openapi.alipaydev.com/gateway.do',
+  ALIPAY_DEV_GETWAY = 'https://openapi.alipaydev.com/gateway.do'
 }
 
 export enum AlipayAPIList {
@@ -353,7 +373,6 @@ export enum AlipayNotifyResult {
   FAILURE = 'failure'
 }
 
-export type AlipayAlgorithmSignType = 'RSA' | 'RSA2'
 export enum AlipayAlgorithm {
   RSA   = 'RSA-SHA1',
   RSA2  = 'RSA-SHA256'

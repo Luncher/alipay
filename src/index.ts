@@ -25,7 +25,8 @@ import {
   AlipayNotifyArgs,
   VerifyPamentArgs,
   AlipayVerifySignArgs,
-  AlipayAPIArgs
+  AlipayAPIArgs,
+  AlipayResponseType
 } from 'config'
 import * as utils from 'utils'
 import { isString } from 'util'
@@ -95,10 +96,11 @@ export default class Alipay {
   }
 
   private makeResponse(response: AlipayResponse): ApiResponse {
+    const respType: AlipayResponseType = utils.getResponseType(response)
     return {
       code: response.code,
       message: alipayResponseMessage[response.code],
-      data: response[utils.getResponseType(response)]
+      data: (respType in response) ? response[respType] : {}
     }
   }
 
@@ -142,10 +144,13 @@ export default class Alipay {
     const sign = params.sign
     const signStr = utils.makeSignStr(params)
     const value = signStr.split('&')
-      .reduce((acc, cur) => {
-        const [k, v] = cur.split('=')
-        return acc + k + '=' + encodeURIComponent(v) + '&'
-      }, '').slice(0, -1)
+      .reduce(
+        (acc, cur) => {
+          const [k, v] = cur.split('=')
+          return acc + k + '=' + encodeURIComponent(v) + '&'
+        },
+        ''
+        ).slice(0, -1)
     const data = value + '&sign=' + encodeURIComponent(sign)
     return { code: 0, message: alipayResponseMessage[0], data }
   }
@@ -154,10 +159,13 @@ export default class Alipay {
     const params = this.validateParams(MethodType.CREATE_WEB_ORDER, apiParams, publicParams)
     const sign = params.sign
     const signStr = utils.makeSignStr(params)
-    const value = signStr.split('&').reduce((acc, cur) => {
+    const value = signStr.split('&').reduce(
+      (acc, cur) => {
         const [k, v] = cur.split('=')
         return `${acc}${k}=${encodeURIComponent(v)}&`
-      }, '').slice(0, -1)
+      },
+      ''
+      ).slice(0, -1)
     const data = `${value}&sign=${encodeURIComponent(sign)}`
     return { code: 0, message: alipayResponseMessage[0], data }
   }
@@ -171,10 +179,13 @@ export default class Alipay {
     const params = this.validateParams(MethodType.CREATE_APP_ORDER, apiParams, publicParams)
     const sign = params.sign
     const signStr = utils.makeSignStr(params)
-    const value = signStr.split('&').reduce((acc, cur) => {
+    const value = signStr.split('&').reduce(
+      (acc, cur) => {
         const [k, v] = cur.split('=')
         return acc + k + '=' + encodeURIComponent(v) + '&'
-      }, '').slice(0, -1)
+      },
+      ''
+      ).slice(0, -1)
 
     const data = value + '&sign=' + encodeURIComponent(sign)
     return { code: AlipayNormalResponseCode.OK, message: alipayResponseMessage[AlipayNormalResponseCode.OK], data }
