@@ -1,0 +1,16 @@
+export * from './notify';
+export * from './trade_close';
+export * from './trade_settle';
+export * from './trade_refund';
+export * from './query_order';
+export * from './create_app_order';
+export * from './create_web_order';
+export * from './create_page_order';
+export * from './cancel_order';
+export * from './verify_payment';
+export * from './trade_precreate';
+export * from './trade_refund_query';
+export * from './bill_download_query';
+export * from './toaccount_transfer';
+import * as Joi from 'joi';
+export declare const basicSchema: Joi.ObjectSchema;

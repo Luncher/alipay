@@ -17,7 +17,7 @@ export interface AlipayOption {
 }
 
 export enum AlipayNormalResponseCode {
-  OK                           = 0,
+  OK                            = 0,
   EXCEPTION                     = -1,
   SIGNATURE_ERROR               = -2,
   SUCCESS                       = 10000,
@@ -29,7 +29,7 @@ export enum AlipayNormalResponseCode {
   PERMISSION_DENIED             = 40006
 }
 
-export const AlipayResponseMessage = {
+export const alipayResponseMessage = {
   '0':   '请求成功',
   '-1':  '异常',
   '-2':  '签名错误',
@@ -50,6 +50,20 @@ export const AlipayResponseMessage = {
   6002: '网络连接出错',
   6004: '支付结果未知（有可能已经支付成功），请查询商户订单列表中订单的支付状态'
 }
+
+export type AlipayAPIArgs = VerifyPamentArgs
+                            | AlipayNotifyArgs
+                            | AlipayPublicArgs
+                            | AlipayCreateOrderArgs
+                            | AlipayQueryOrderArgs
+                            | AlipayCancelOrderArgs
+                            | AlipayTradeCloseArgs
+                            | AlipayTradeRefundArgs
+                            | AlipayTradeRefundQueryArgs
+                            | AlipayBillQueryArgs
+                            | AlipayTradePrecreateArgs
+                            | AlipayTradeSettleArgs
+                            | AlipayToaccountTransferArgs
 
 //App支付同步通知参数
 type VerifyPamentResult = string | PaymentResult
@@ -92,23 +106,32 @@ export enum AlipayPaymentResponseCode {
 export interface AlipayNotifyArgs {
   notify_time:  string, //通知的发送时间。格式为yyyy-MM-dd HH:mm:ss
   notify_type:  string, //通知的类型
-  notify_id:    string, //通知校验ID	
+  notify_id:    string, //通知校验ID
   app_id:       string, //支付宝分配给开发者的应用Id
   charset:      string, //编码格式，如utf-8、gbk、gb2312等
   version:      string, //调用的接口版本，固定为：1.0
   sign_type:    AlipaySignType, //签名类型
   trade_no:     string, //支付宝交易凭证号
   out_trade_no: string, //原支付请求的商户订单号
+  sign:         string, //签名
   [key: string]: string | number//可选参数
+}
+
+//校验签名的参数
+export interface AlipayVerifySignArgs {
+  sign: string,
+  msg?: string,
+  sign_type: string,
+  async_notify_response: object
 }
 
 //支付宝接口公共请求参数
 export interface AlipayPublicArgs {
-  app_id: string,     //支付宝分配给开发者的应用ID
-  method: MethodType, //接口名称
-  format?: string,    //仅支持JSON
-  return_url?: string,//HTTP/HTTPS开头字符串
-  charset: string,    //请求使用的编码格式，如utf-8,gbk,gb2312等
+  app_id: string,       //支付宝分配给开发者的应用ID
+  method: MethodType,   //接口名称
+  format?: string,      //仅支持JSON
+  return_url?: string,  //HTTP/HTTPS开头字符串
+  charset: string,      //请求使用的编码格式，如utf-8,gbk,gb2312等
   sign_type: AlipaySignType,  //商户生成签名字符串所使用的签名算法类型
   sign: string,       //商户请求参数的签名串
   timestamp: string,   //发送请求的时间，格式"yyyy-MM-dd HH:mm:ss"
@@ -117,25 +140,37 @@ export interface AlipayPublicArgs {
   biz_content: string //业务请求参数的集合，最大长度不限
 }
 
+export type AlipayResponse = AlipayPublicResponse | AlipayTradeAppPayResponse
+
+//支付宝接口公共响应参数
+export interface AlipayPublicResponse {
+  code: ApiResponseCode,
+  msg: string,
+  sub_code?: string,
+  sub_msg?: string,
+  sign: string
+  [key: string]: string
+}
+
 //创建订单参数
 export interface AlipayCreateOrderArgs {
-  body?:        string,//对一笔交易的具体描述信息
-  subject:      string,//商品的标题/交易标题/订单标题/订单关键字等
-  out_trade_no: string,//商户网站唯一订单号
-  timeout_express?: string,//该笔订单允许的最晚付款时间，逾期将关闭交易
-  time_expire?: string,//绝对超时时间，格式为yyyy-MM-dd HH:mm
-  total_amount: number,//订单总金额，单位为元
-  auth_token: string,//针对用户授权接口，获取用户相关数据时，用于标识用户授权关系
-  product_code: string,//销售产品码
-  goods_type?: GoodsType,//商品主类型
-  passback_params?: string,//公用回传参数，如果请求时传递了该参数，则返回给商户时会回传该参数
-  promo_params?: string,//优惠参数注：仅与支付宝协商后可用
-  extend_params?: string,//业务扩展参数
-  enable_pay_channels?: string,//可用渠道
-  disable_pay_channels?: string,//禁用渠道
-  store_id: string,//商户门店编号
-  quit_url: string,//添加该参数后在h5支付收银台会出现返回按钮，可用于用户付款中途退出并返回到该参数指定的商户网站地址
-  ext_user_info: string//外部指定买家
+  body?:        string, //对一笔交易的具体描述信息
+  subject:      string, //商品的标题/交易标题/订单标题/订单关键字等
+  out_trade_no: string, //商户网站唯一订单号
+  timeout_express?: string, //该笔订单允许的最晚付款时间，逾期将关闭交易
+  time_expire?: string, //绝对超时时间，格式为yyyy-MM-dd HH:mm
+  total_amount: number, //订单总金额，单位为元
+  auth_token: string,   //针对用户授权接口，获取用户相关数据时，用于标识用户授权关系
+  product_code: string, //销售产品码
+  goods_type?: GoodsType,   //商品主类型
+  passback_params?: string, //公用回传参数，如果请求时传递了该参数，则返回给商户时会回传该参数
+  promo_params?: string,    //优惠参数注：仅与支付宝协商后可用
+  extend_params?: string,   //业务扩展参数
+  enable_pay_channels?: string,   //可用渠道
+  disable_pay_channels?: string,  //禁用渠道
+  store_id: string, //商户门店编号
+  quit_url: string, //添加该参数后在h5支付收银台会出现返回按钮，可用于用户付款中途退出并返回到该参数指定的商户网站地址
+  ext_user_info: string //外部指定买家
 }
 
 //查询订单参数
@@ -160,25 +195,25 @@ export interface AlipayTradeCloseArgs {
 
 //统一收单交易退款接口
 export interface AlipayTradeRefundArgs {
-  out_trade_no?: string,//订单支付时传入的商户订单号,和支付宝交易号不能同时为空
-  trade_no?: string,    //支付宝交易号，和商户订单号不能同时为空
-  refund_amount?: number,//需要退款的金额
-  refund_currency?: string,//订单退款币种信息
-  refund_reason?: string,//退款的原因说明
-  out_request_no?: string,//标识一次退款请求
-  operator_id?: string,//商户的操作员编号
-  store_id?: string,//商户的门店编号
-  terminal_id?: string,//商户的终端编号
-  goods_detail?: any,//退款包含的商品列表信息
+  out_trade_no?: string,    //订单支付时传入的商户订单号,和支付宝交易号不能同时为空
+  trade_no?: string,        //支付宝交易号，和商户订单号不能同时为空
+  refund_amount?: number,   //需要退款的金额
+  refund_currency?: string, //订单退款币种信息
+  refund_reason?: string,   //退款的原因说明
+  out_request_no?: string,  //标识一次退款请求
+  operator_id?: string,     //商户的操作员编号
+  store_id?: string,        //商户的门店编号
+  terminal_id?: string,     //商户的终端编号
+  goods_detail?: any,       //退款包含的商品列表信息
   refund_royalty_parameters?: any,//退分账明细信息
-  org_pid?: string//银行间联模式下有用，其它场景请不要使用
+  org_pid?: string          //银行间联模式下有用，其它场景请不要使用
 }
 
 //统一收单交易退款查询
 export interface AlipayTradeRefundQueryArgs {
-  out_trade_no?: string,//订单支付时传入的商户订单号,和支付宝交易号不能同时为空
-  trade_no?: string,    //支付宝交易号，和商户订单号不能同时为空
-  out_request_no: string,//请求退款接口时，传入的退款请求号
+  out_trade_no?: string,  //订单支付时传入的商户订单号,和支付宝交易号不能同时为空
+  trade_no?: string,      //支付宝交易号，和商户订单号不能同时为空
+  out_request_no: string, //请求退款接口时，传入的退款请求号
   org_pid?: string       //银行间联模式下有用，其它场景请不要使用
 }
 
@@ -199,15 +234,15 @@ export interface AlipayTradePrecreateArgs {
   body?: string,       //对交易或商品的描述
   operator_id?: string,//商户操作员编号
   store_id?: string,   //商户门店编号
-  disable_pay_channels?: string,//禁用渠道
-  enable_pay_channels?: string, //可用渠道，用户只能在指定渠道范围内支付
-  terminal_id?: string,   //商户机具终端编号
-  extend_params?: string, //业务扩展参数
-  timeout_express?: string, //该笔订单允许的最晚付款时间
-  settle_info?: any,        //描述结算信息
-  merchant_order_no?: string,//商户原始订单号
-  business_params?: string,   //商户传入业务信息
-  qr_code_timeout_express?: string //该笔订单允许的最晚付款时间
+  disable_pay_channels?: string,    //禁用渠道
+  enable_pay_channels?: string,     //可用渠道，用户只能在指定渠道范围内支付
+  terminal_id?: string,             //商户机具终端编号
+  extend_params?: string,           //业务扩展参数
+  timeout_express?: string,         //该笔订单允许的最晚付款时间
+  settle_info?: any,                //描述结算信息
+  merchant_order_no?: string,       //商户原始订单号
+  business_params?: string,         //商户传入业务信息
+  qr_code_timeout_express?: string  //该笔订单允许的最晚付款时间
 }
 
 //统一收单交易结算接口
@@ -231,12 +266,32 @@ export interface AlipayToaccountTransferArgs {
 
 export enum AlipayPayType {
   ALIPAY_USERID   = 'ALIPAY_USERID',
-  ALIPAY_LOGONID  = 'ALIPAY_LOGONID',
+  ALIPAY_LOGONID  = 'ALIPAY_LOGONID'
 }
 
 export enum GoodsType {
   VIRTUAL     = 0,
   PARTICALITY = 1
+}
+
+export enum PayChannel {
+  balance = 'balance',
+  moneyFund = 'moneyFund',
+  coupon = 'coupon',
+  pcredit = 'pcredit',
+  pcreditpayInstallment = 'pcreditpayInstallment',
+  creditCard = 'creditCard',
+  creditCardExpress = 'creditCardExpress',
+  creditCardCartoon = 'creditCardCartoon',
+  credit_group = 'credit_group',
+  debitCardExpress = 'debitCardExpress',
+  mcard = 'mcard',
+  pcard = 'pcard',
+  promotion = 'promotion',
+  voucher = 'voucher',
+  point = 'point',
+  mdiscount = 'mdiscount',
+  bankPay = 'bankPay'
 }
 
 export enum MethodType {
@@ -259,7 +314,7 @@ export enum MethodType {
 }
 
 export enum GateWay {
-  ALIPAY_GETWAY = 'https://openapi.alipay.com/gateway.do',
+  ALIPAY_GETWAY     = 'https://openapi.alipay.com/gateway.do',
   ALIPAY_DEV_GETWAY = 'https://openapi.alipaydev.com/gateway.do',
 }
 
@@ -284,8 +339,8 @@ export enum AlipayNotifyResult {
 }
 
 export enum AlipayAlgorithm {
-  RSA   = "RSA-SHA1",
-  RSA2  = "RSA-SHA256"
+  RSA   = 'RSA-SHA1',
+  RSA2  = 'RSA-SHA256'
 }
 
 export enum AlipaySignType {

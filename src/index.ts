@@ -4,10 +4,13 @@ import {
   AlipayOption,
   MethodType,
   GateWay,
+  AlipayResponse,
   AlipayPrivKey,
   AlipayTradeSettleArgs,
   AlipayBillQueryArgs,
+  AlipayTradeAppPayResponse,
   AlipayPublicArgs,
+  AlipayPublicResponse,
   AlipayToaccountTransferArgs,
   AlipayTradeRefundArgs,
   AlipayTradeCloseArgs,
@@ -15,33 +18,34 @@ import {
   AlipayCancelOrderArgs,
   AlipayCreateOrderArgs,
   AlipayTradePrecreateArgs,
-  AlipayResponseMessage,
+  alipayResponseMessage,
   AlipayNormalResponseCode,
   AlipayTradeRefundQueryArgs,
   ApiResponse,
   AlipayNotifyArgs,
-  VerifyPamentArgs
-} from './config'
-import * as utils from './utils'
+  VerifyPamentArgs,
+  AlipayVerifySignArgs,
+  AlipayAPIArgs
+} from 'config'
+import * as utils from 'utils'
 import { isString } from 'util'
-import Validator from './validator'
+import * as Validator from 'validator'
 
 export default class Alipay {
-  gateWay: GateWay
-  options: AlipayOption
-  
+  public gateWay: GateWay
+  public options: AlipayOption
+
   constructor(options: AlipayOption) {
     this.options = this.normalizeOptions(options)
   }
 
-  normalizeOptions(options: AlipayOption) {
+  private normalizeOptions(options: AlipayOption): AlipayOption {
     let { appPrivKeyFile: privKey, alipayPubKeyFile: publicKey } = options
 
     if (publicKey.indexOf('BEGIN PUBLIC KEY') === -1) {
-      publicKey = "-----BEGIN PUBLIC KEY-----\n" + publicKey
-        + "\n-----END PUBLIC KEY-----"
+      publicKey = `-----BEGIN PUBLIC KEY-----\n${publicKey}\n-----END PUBLIC KEY-----`
     }
-    if (privKey.indexOf('BEGIN RSA PRIVATE KEY') === -1 
+    if (privKey.indexOf('BEGIN RSA PRIVATE KEY') === -1
       && privKey.indexOf('BEGIN PRIVATE KEY') === -1) {
       privKey = AlipayPrivKey.BEGIN + privKey + AlipayPrivKey.END
     }
@@ -62,253 +66,167 @@ export default class Alipay {
     return this.options.appPrivKeyFile
   }
 
-  get publicKey() {
+  get publicKey(): string {
     return this.options.alipayPubKeyFile
   }
 
-  get notifyUrl() {
+  get notifyUrl(): string {
     return this.options.notifyUrl
   }
 
-  validateBasicParams (method, basicParams): Promise<AlipayPublicArgs>  {
-    const params  = Object.assign({}, this.options, basicParams, { method })
+  private validateBasicParams (method: MethodType, publicParams: AlipayPublicArgs): AlipayPublicArgs {
+    const params: AlipayPublicArgs = { ...this.options, ... publicParams, method }
+
     return Validator.validateBasicParams(params)
   }
 
-  validateAPIParams (method, options) {
+  private validateAPIParams (method: MethodType, options: AlipayAPIArgs): AlipayAPIArgs {
     return Validator.validateAPIParams(method, options)
   }
 
-  validateParams(method, publicParams, basicParams): Promise<AlipayPublicArgs> {
-    return Promise.all([
-      this.validateBasicParams(method, basicParams),
-      this.validateAPIParams(method, publicParams)
-    ])
-    .then(result => {
-      return Object.assign({}, result[0], { biz_content: JSON.stringify(result[1]) })
-    })
-    .then(params => {
-      params.sign = utils.makeSign(this.privKey, params)
-      return params
-    })
+  private validateParams(method: MethodType, apiParams: AlipayAPIArgs, publicParams: AlipayPublicArgs): AlipayPublicArgs {
+    const validateBasicParams: AlipayPublicArgs = this.validateBasicParams(method, publicParams)
+    const validateApiParams: AlipayAPIArgs = this.validateAPIParams(method, apiParams)
+
+    validateBasicParams.biz_content = JSON.stringify(validateApiParams)
+    validateBasicParams.sign = utils.makeSign(this.privKey, validateBasicParams)
+
+    return validateBasicParams
   }
 
-  makeResponse(response): ApiResponse {
+  private makeResponse(response: AlipayResponse): ApiResponse {
     return {
       code: response.code,
-      message: AlipayResponseMessage[response.code],
+      message: alipayResponseMessage[response.code],
       data: response[utils.responseType(response)]
     }
   }
 
-  makeRequest(params, options = {}): Promise<ApiResponse> {
-    const httpclient = new urllib.HttpClient2()
-    return httpclient.request(this.gateWay, Object.assign({
-      data: params,
-      dataType: 'json',
-      dataAsQueryString: true
-    }, options))
-    .then(resp => this.makeResponse(resp.data))
+  private makeRequest(params: AlipayPublicArgs, options: urllib.RequestOptions = {}): Promise<ApiResponse> {
+    const httpclient: urllib.HttpClient2 = new urllib.HttpClient2()
+
+    return httpclient.request(this.gateWay,  { data: params, dataType: 'json', dataAsQueryString: true, ...options })
+      .then((resp: urllib.HttpClientResponse<AlipayPublicResponse>) => this.makeResponse(resp.data))
   }
 
-  verifyPayment(params: VerifyPamentArgs): Promise<ApiResponse> {
-    return this.validateAPIParams(MethodType.VERIFY_PAYMENT, params)
-      .then(() => this.makeResponse(isString(params.result) ? JSON.parse(params.result) : params.result))
+  public verifyPayment(params: VerifyPamentArgs): ApiResponse {
+    this.validateAPIParams(MethodType.VERIFY_PAYMENT, params)
+    const data: AlipayTradeAppPayResponse = isString(params.result) ? JSON.parse(params.result) : params.result
+
+    return this.makeResponse(data)
   }
 
-  makeNotifyResponse(params: AlipayNotifyArgs): Promise<ApiResponse> {
-    return this.validateAPIParams(MethodType.NOTIFY_RESPONSE, params)
-      .then(() => {
-        const resp = { sign: params.sign, 'async_notify_response': params, sign_type: params.sign_type }
-        return utils.verifySign(this.publicKey, resp, ['sign', 'sign_type'], params)
-      })
-      .then(valid => {
-        const code = valid ? AlipayNormalResponseCode.OK : AlipayNormalResponseCode.SIGNATURE_ERROR
-        return { code, message: AlipayResponseMessage[code], data: params }
-      })
+  public makeNotifyResponse(params: AlipayNotifyArgs): ApiResponse {
+    this.validateAPIParams(MethodType.NOTIFY_RESPONSE, params)
+    const resp: AlipayVerifySignArgs = { sign: params.sign, async_notify_response: params, sign_type: params.sign_type }
+    const valid = utils.verifySign(this.publicKey, resp, ['sign', 'sign_type'], params)
+    const code = valid ? AlipayNormalResponseCode.OK : AlipayNormalResponseCode.SIGNATURE_ERROR
+
+    return { code, message: alipayResponseMessage[code], data: params }
   }
 
-  createWebOrderURL(publicParams: AlipayCreateOrderArgs, basicParams?: AlipayPublicArgs): Promise<ApiResponse> {
-    return this.createWebOrder(publicParams, basicParams)
-    .then(result => {
-      if (result.code === 0) {
-        result.data = this.gateWay + '?' + result.data
-      }
-      return result
-    })
+  public createWebOrderURL(apiParams: AlipayCreateOrderArgs, publicParams?: AlipayPublicArgs): ApiResponse {
+    const result = this.createWebOrder(apiParams, publicParams)
+    result.data = this.gateWay + '?' + String(result.data)
+    return result
   }
 
-  createPageOrderURL(publicParams: AlipayCreateOrderArgs, basicParams?: AlipayPublicArgs): Promise<ApiResponse> {
-    return this.createPageOrder(publicParams, basicParams)
-      .then(result => {
-        if (result.code === 0) {
-          result.data = this.gateWay + '?' + result.data
-        }
-        return result
-      })
+  public createPageOrderURL(apiParams: AlipayCreateOrderArgs, publicParams?: AlipayPublicArgs): ApiResponse {
+    const result = this.createPageOrder(apiParams, publicParams)
+    result.data = this.gateWay + '?' + String(result.data)
+    return result
   }
 
-  createPageOrder(publicParams: AlipayCreateOrderArgs, basicParams?: AlipayPublicArgs): Promise<ApiResponse> {
-    let sign
-    return this.validateParams(MethodType.CREATE_PAGE_ORDER, publicParams, basicParams)
-    .then(params => {
-      sign = params.sign
-      return utils.makeSignStr(params)
-    })
-    .then(signStr => {
-      return signStr.split('&').reduce((acc, cur) => {
-        const [key, value] = cur.split('=')
-        return acc + key + '=' + encodeURIComponent(value) + '&'
-      }, "").slice(0, -1)
-    })
-    .then(data => {
-      data = data + '&sign=' + encodeURIComponent(sign)
-      return { code: 0, message: AlipayResponseMessage[0], data }
-    })
+  public createPageOrder(apiParams: AlipayCreateOrderArgs, publicParams?: AlipayPublicArgs): ApiResponse {
+    const params = this.validateParams(MethodType.CREATE_PAGE_ORDER, apiParams, publicParams)
+    const sign = params.sign
+    const signStr = utils.makeSignStr(params)
+    const value = signStr.split('&').reduce((acc, cur) => {
+        const [k, v] = cur.split('=')
+        return acc + k + '=' + encodeURIComponent(v) + '&'
+      }, '').slice(0, -1)
+    const data = value + '&sign=' + encodeURIComponent(sign)
+    return { code: 0, message: alipayResponseMessage[0], data }
   }
 
-  createWebOrder(publicParams: AlipayCreateOrderArgs, basicParams?: AlipayPublicArgs): Promise<ApiResponse> {
-    let sign
-    return this.validateParams(MethodType.CREATE_WEB_ORDER, publicParams, basicParams)
-    .then(params => {
-      sign = params.sign
-      return utils.makeSignStr(params)
-    })
-    .then(signStr => {
-      return signStr.split('&').reduce((acc, cur) => {
-        const [key, value] = cur.split('=')
-        return acc + key + '=' + encodeURIComponent(value) + '&'
-      }, "").slice(0, -1)
-    })
-    .then(data => {
-      data = data + '&sign=' + encodeURIComponent(sign)
-      return { code: 0, message: AlipayResponseMessage[0], data }
-    })
+  public createWebOrder(apiParams: AlipayCreateOrderArgs, publicParams?: AlipayPublicArgs): ApiResponse {
+    const params = this.validateParams(MethodType.CREATE_WEB_ORDER, apiParams, publicParams)
+    const sign = params.sign
+    const signStr = utils.makeSignStr(params)
+    const value = signStr.split('&').reduce((acc, cur) => {
+        const [k, v] = cur.split('=')
+        return `${acc}${k}=${encodeURIComponent(v)}&`
+      }, '').slice(0, -1)
+    const data = `${value}&sign=${encodeURIComponent(sign)}`
+    return { code: 0, message: alipayResponseMessage[0], data }
   }
 
   //Compat
-  createOrder(publicParams: AlipayCreateOrderArgs, basicParams?: AlipayPublicArgs) {
-    return this.createAppOrder(publicParams, basicParams)
+  public createOrder(apiParams: AlipayCreateOrderArgs, publicParams?: AlipayPublicArgs): ApiResponse {
+    return this.createAppOrder(apiParams, publicParams)
   }
 
-  createAppOrder(publicParams: AlipayCreateOrderArgs, basicParams?: AlipayPublicArgs) {
-    let sign
-    return this.validateParams(MethodType.CREATE_APP_ORDER, publicParams, basicParams)
-      .then(params => {
-        sign = params.sign
-        return utils.makeSignStr(params)
-      })
-      .then(signStr => {
-        return signStr.split('&').reduce((acc, cur) => {
-          const [key, value] = cur.split('=')
-          return acc + key + '=' + encodeURIComponent(value) + '&'
-        }, "").slice(0, -1)
-      })
-      .then(data => {
-        data = data + '&sign=' + encodeURIComponent(sign)
-        return { code: AlipayNormalResponseCode.OK, message: AlipayResponseMessage[AlipayNormalResponseCode.OK], data }
-      })
+  public createAppOrder(apiParams: AlipayCreateOrderArgs, publicParams?: AlipayPublicArgs): ApiResponse {
+    const params = this.validateParams(MethodType.CREATE_APP_ORDER, apiParams, publicParams)
+    const sign = params.sign
+    const signStr = utils.makeSignStr(params)
+    const value = signStr.split('&').reduce((acc, cur) => {
+        const [k, v] = cur.split('=')
+        return acc + k + '=' + encodeURIComponent(v) + '&'
+      }, '').slice(0, -1)
+
+    const data = value + '&sign=' + encodeURIComponent(sign)
+    return { code: AlipayNormalResponseCode.OK, message: alipayResponseMessage[AlipayNormalResponseCode.OK], data }
   }
 
-  queryOrder(publicParams: AlipayQueryOrderArgs, basicParams?: AlipayPublicArgs) {
+  public queryOrder(apiParams: AlipayQueryOrderArgs, publicParams?: AlipayPublicArgs): Promise<ApiResponse> {
     return Promise.resolve()
       .then(() => {
-        if (!publicParams.out_trade_no && !publicParams.trade_no) {
-          throw new Error("outTradeNo and tradeNo can not both omit.")
+        if (!apiParams.out_trade_no && !apiParams.trade_no) {
+          throw new Error('outTradeNo and tradeNo can not both omit.')
         }
-        return this.validateParams(MethodType.QUERY_ORDER, publicParams, basicParams)
-        .then(params => {
-          return this.makeRequest(params)
-        })
-      })
-  }
-
-  cancelOrder(publicParams: AlipayCancelOrderArgs, basicParams?: AlipayPublicArgs) {
-    return Promise.resolve()
-      .then(() => {
-        if (!publicParams.out_trade_no && !publicParams.trade_no) {
-          throw new Error("outTradeNo and tradeNo can not both omit.")
-        }
-        return this.validateParams(MethodType.CANCEL_ORDER, publicParams, basicParams)
-          .then(params => {
-            return this.makeRequest(params)
-          })
-      })
-  }
-
-  tradeClose(publicParams: AlipayTradeCloseArgs, basicParams?: AlipayPublicArgs) {
-    return Promise.resolve()
-      .then(() => {
-        if (!publicParams.out_trade_no && !publicParams.trade_no) {
-          throw new Error("outTradeNo and tradeNo can not both omit.")
-        }
-        return this.validateParams(MethodType.TRADE_CLOSE, publicParams, basicParams)
-          .then(params => {
-            return this.makeRequest(params)
-          })
-      })
-  }
-
-  tradeRefund(publicParams: AlipayTradeRefundArgs, basicParams?: AlipayPublicArgs) {
-    return Promise.resolve()
-      .then(() => {
-        if (!publicParams.out_trade_no && !publicParams.trade_no) {
-          throw new Error("outTradeNo and tradeNo can not both omit.")
-        }
-        return this.validateParams(MethodType.TRADE_REFUND, publicParams, basicParams)
-          .then(params => {
-            return this.makeRequest(params)
-          })
-      })
-  }
-
-  tradeRefundQuery(publicParams: AlipayTradeRefundQueryArgs, basicParams?: AlipayPublicArgs) {
-    return Promise.resolve()
-      .then(() => {
-        if (!publicParams.out_trade_no && !publicParams.trade_no) {
-          throw new Error("outTradeNo and tradeNo can not both omit.")
-        }
-        return this.validateParams(MethodType.TRADE_REFUND_QUERY, publicParams, basicParams)
-          .then(params => {
-            return this.makeRequest(params)
-          })
-      })
-  }
-
-  billDownloadQuery(publicParams: AlipayBillQueryArgs, basicParams?: AlipayPublicArgs) {
-    return Promise.resolve()
-      .then(() => {
-        return this.validateParams(MethodType.BILL_DOWNLOAD_QUERY, publicParams, basicParams)
-          .then(params => {
-            return this.makeRequest(params)
-          })
-      })
-  }
-
-  tradePrecreate(publicParams: AlipayTradePrecreateArgs, basicParams?: AlipayPublicArgs) {
-    return Promise.resolve()
-      .then(() => {
-        return this.validateParams(MethodType.TRADE_PRECREATE, publicParams, basicParams)
-          .then(params => {
-            return this.makeRequest(params)
-          })
-      })
-  }
-
-  tradeSettle(publicParams: AlipayTradeSettleArgs, basicParams?: AlipayPublicArgs) {
-    return Promise.resolve()
-    .then(() => {
-      return this.validateParams(MethodType.TRADE_SETTLE, publicParams, basicParams)
-      .then(params => {
+        const params = this.validateParams(MethodType.QUERY_ORDER, apiParams, publicParams)
         return this.makeRequest(params)
       })
-    })
   }
 
-  toaccountTransfer(publicParams: AlipayToaccountTransferArgs, basicParams?: AlipayPublicArgs) {
-    return this.validateParams(MethodType.FUND_TRANS_TOACCOUNT_TRANSFER, publicParams, basicParams)
-      .then(params => {
-        return this.makeRequest(params)
-      })
+  public cancelOrder(apiParams: AlipayCancelOrderArgs, publicParams?: AlipayPublicArgs): Promise<ApiResponse> {
+    const params = this.validateParams(MethodType.CANCEL_ORDER, apiParams, publicParams)
+    return this.makeRequest(params)
+  }
+
+  public tradeClose(apiParams: AlipayTradeCloseArgs, publicParams?: AlipayPublicArgs): Promise<ApiResponse> {
+    const params = this.validateParams(MethodType.TRADE_CLOSE, apiParams, publicParams)
+    return this.makeRequest(params)
+  }
+
+  public tradeRefund(apiParams: AlipayTradeRefundArgs, publicParams?: AlipayPublicArgs): Promise<ApiResponse> {
+    const params = this.validateParams(MethodType.TRADE_REFUND, apiParams, publicParams)
+    return this.makeRequest(params)
+  }
+
+  public tradeRefundQuery(apiParams: AlipayTradeRefundQueryArgs, publicParams?: AlipayPublicArgs): Promise<ApiResponse> {
+    const params = this.validateParams(MethodType.TRADE_REFUND_QUERY, apiParams, publicParams)
+    return this.makeRequest(params)
+  }
+
+  public billDownloadQuery(apiParams: AlipayBillQueryArgs, publicParams?: AlipayPublicArgs): Promise<ApiResponse> {
+    const params = this.validateParams(MethodType.BILL_DOWNLOAD_QUERY, apiParams, publicParams)
+    return this.makeRequest(params)
+  }
+
+  public tradePrecreate(apiParams: AlipayTradePrecreateArgs, publicParams?: AlipayPublicArgs): Promise<ApiResponse> {
+    const params = this.validateParams(MethodType.TRADE_PRECREATE, apiParams, publicParams)
+    return this.makeRequest(params)
+  }
+
+  public tradeSettle(apiParams: AlipayTradeSettleArgs, publicParams?: AlipayPublicArgs): Promise<ApiResponse> {
+    const params = this.validateParams(MethodType.TRADE_SETTLE, apiParams, publicParams)
+    return this.makeRequest(params)
+  }
+
+  public toaccountTransfer(apiParams: AlipayToaccountTransferArgs, publicParams?: AlipayPublicArgs): Promise<ApiResponse> {
+    const params = this.validateParams(MethodType.FUND_TRANS_TOACCOUNT_TRANSFER, apiParams, publicParams)
+    return this.makeRequest(params)
   }
 }

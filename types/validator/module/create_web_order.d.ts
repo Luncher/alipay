@@ -1,4 +1,5 @@
-import * as utils from '../utils';
+import * as Joi from 'joi';
+export declare const createWebOrderSchema: Joi.ObjectSchema;
 declare const _default: {
     body: {
         type: string;
@@ -26,7 +27,7 @@ declare const _default: {
         type: string;
         required: boolean;
         maxLength: number;
-        normalize: typeof utils.normalizeTotalAmount;
+        normalize: any;
     };
     seller_id: {
         type: string;
@@ -44,24 +45,15 @@ declare const _default: {
     passback_params: {
         type: string;
         maxLength: number;
-        normalize: typeof utils.normalizePassbackParams;
+        normalize: any;
     };
     promo_params: {
         type: string;
         maxLength: number;
     };
-    extend_params: {
-        type: string;
-        enums: string[];
-    };
-    enable_pay_channels: {
-        type: string;
-        enums: string[];
-    };
-    disable_pay_channels: {
-        type: string;
-        enums: string[];
-    };
+    extend_params: any;
+    enable_pay_channels: any;
+    disable_pay_channels: any;
     store_id: {
         type: string;
         maxLength: number;

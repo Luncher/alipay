@@ -1,0 +1,22 @@
+{
+  "extends": ["tslint-microsoft-contrib"],
+  "rulesDirectory": ["node_modules/tslint-microsoft-contrib"],
+  "rules": {
+    "interface-name":false,
+    "semicolon": false,
+    "ordered-imports": false,
+    "promise-function-async": false,
+    "export-name":false,
+    "prefer-template":false,
+    "no-default-export":false,
+    "typedef":false,
+    "newline-before-return":false,
+    "completed-docs":false,
+    "member-ordering":false,
+    "strict-boolean-expressions":false,
+    "no-submodule-imports":false,
+    "newline-per-chained-call":false,
+    "no-implicit-dependencies":false,
+    "match-default-export-name":false
+  }
+}

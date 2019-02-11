@@ -305,6 +305,8 @@ return service.tradeRefundQuery(params)
 
 ### 查询账单下载地址`billDownloadQuery`
 
+[查询账单下载地址文档](https://docs.open.alipay.com/api_15/alipay.data.dataservice.bill.downloadurl.query)
+
 ```javascript
 const params = {
   bill_type: 'trade',

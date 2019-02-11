@@ -25,7 +25,7 @@ export declare enum AlipayNormalResponseCode {
     PROCESSING_FAILURE = 40004,
     PERMISSION_DENIED = 40006
 }
-export declare const AlipayResponseMessage: {
+export declare const alipayResponseMessage: {
     '0': string;
     '-1': string;
     '-2': string;
@@ -44,6 +44,7 @@ export declare const AlipayResponseMessage: {
     6002: string;
     6004: string;
 };
+export declare type AlipayAPIArgs = VerifyPamentArgs | AlipayNotifyArgs | AlipayPublicArgs | AlipayCreateOrderArgs | AlipayQueryOrderArgs | AlipayCancelOrderArgs | AlipayTradeCloseArgs | AlipayTradeRefundArgs | AlipayTradeRefundQueryArgs | AlipayBillQueryArgs | AlipayTradePrecreateArgs | AlipayTradeSettleArgs | AlipayToaccountTransferArgs;
 declare type VerifyPamentResult = string | PaymentResult;
 export interface VerifyPamentArgs {
     memo: string;
@@ -85,7 +86,14 @@ export interface AlipayNotifyArgs {
     sign_type: AlipaySignType;
     trade_no: string;
     out_trade_no: string;
+    sign: string;
     [key: string]: string | number;
+}
+export interface AlipayVerifySignArgs {
+    sign: string;
+    msg?: string;
+    sign_type: string;
+    async_notify_response: object;
 }
 export interface AlipayPublicArgs {
     app_id: string;
@@ -99,6 +107,15 @@ export interface AlipayPublicArgs {
     version: string;
     notify_url: string;
     biz_content: string;
+}
+export declare type AlipayResponse = AlipayPublicResponse | AlipayTradeAppPayResponse;
+export interface AlipayPublicResponse {
+    code: ApiResponseCode;
+    msg: string;
+    sub_code?: string;
+    sub_msg?: string;
+    sign: string;
+    [key: string]: string;
 }
 export interface AlipayCreateOrderArgs {
     body?: string;
@@ -199,6 +216,25 @@ export declare enum AlipayPayType {
 export declare enum GoodsType {
     VIRTUAL = 0,
     PARTICALITY = 1
+}
+export declare enum PayChannel {
+    balance = "balance",
+    moneyFund = "moneyFund",
+    coupon = "coupon",
+    pcredit = "pcredit",
+    pcreditpayInstallment = "pcreditpayInstallment",
+    creditCard = "creditCard",
+    creditCardExpress = "creditCardExpress",
+    creditCardCartoon = "creditCardCartoon",
+    credit_group = "credit_group",
+    debitCardExpress = "debitCardExpress",
+    mcard = "mcard",
+    pcard = "pcard",
+    promotion = "promotion",
+    voucher = "voucher",
+    point = "point",
+    mdiscount = "mdiscount",
+    bankPay = "bankPay"
 }
 export declare enum MethodType {
     QUERY_ORDER = "alipay.trade.query",

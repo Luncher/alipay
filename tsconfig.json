@@ -1,6 +1,7 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
+    "baseUrl": "./src",
     "types": ["node"],
     "lib":["es2015"],
     "module": "commonjs",
@@ -12,8 +13,7 @@
     "target": "es5",
     "noUnusedLocals":true,
     "noUnusedParameters": true,
-    "outDir": "./dist/",
-    "strictNullChecks":true
+    "outDir": "./dist/"
   },
   "include": [
     "src/**/*"
