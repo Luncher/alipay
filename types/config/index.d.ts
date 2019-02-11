@@ -45,7 +45,7 @@ export declare const alipayResponseMessage: {
     6004: string;
 };
 export declare type AlipayAPIArgs = VerifyPamentArgs | AlipayNotifyArgs | AlipayPublicArgs | AlipayCreateOrderArgs | AlipayQueryOrderArgs | AlipayCancelOrderArgs | AlipayTradeCloseArgs | AlipayTradeRefundArgs | AlipayTradeRefundQueryArgs | AlipayBillQueryArgs | AlipayTradePrecreateArgs | AlipayTradeSettleArgs | AlipayToaccountTransferArgs;
-declare type VerifyPamentResult = string | PaymentResult;
+export declare type VerifyPamentResult = string | PaymentResult;
 export interface VerifyPamentArgs {
     memo: string;
     result: VerifyPamentResult;
@@ -56,7 +56,8 @@ export interface PaymentResult {
     sign: string;
     sign_type: AlipaySignType;
 }
-export interface AlipayTradeAppPayResponse {
+export declare type AlipayTradeAppPayResponse = AlipayTradeAppPayResponseImpl & AlipayResponseTypeMap;
+export interface AlipayTradeAppPayResponseImpl {
     code: AlipayNormalResponseCode;
     msg: string;
     app_id: string;

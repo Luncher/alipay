@@ -8,7 +8,7 @@ import {
   AlipayPrivKey,
   AlipayTradeSettleArgs,
   AlipayBillQueryArgs,
-  AlipayTradeAppPayResponse,
+  PaymentResult,
   AlipayPublicArgs,
   AlipayPublicResponse,
   AlipayToaccountTransferArgs,
@@ -25,8 +25,7 @@ import {
   AlipayNotifyArgs,
   VerifyPamentArgs,
   AlipayVerifySignArgs,
-  AlipayAPIArgs,
-  AlipayResponseType
+  AlipayAPIArgs
 } from 'config'
 import * as utils from 'utils'
 import { isString } from 'util'
@@ -96,11 +95,10 @@ export default class Alipay {
   }
 
   private makeResponse(response: AlipayResponse): ApiResponse {
-    const respType: AlipayResponseType = utils.getResponseType(response)
     return {
       code: response.code,
       message: alipayResponseMessage[response.code],
-      data: (respType in response) ? response[respType] : {}
+      data: response[utils.getResponseType(response)]
     }
   }
 
@@ -113,9 +111,9 @@ export default class Alipay {
 
   public verifyPayment(params: VerifyPamentArgs): ApiResponse {
     this.validateAPIParams(MethodType.VERIFY_PAYMENT, params)
-    const data: AlipayTradeAppPayResponse = isString(params.result) ? JSON.parse(params.result) : params.result
+    const data = isString(params.result) ? (<PaymentResult>JSON.parse(params.result)) : params.result
 
-    return this.makeResponse(data)
+    return this.makeResponse(data.alipay_trade_app_pay_response)
   }
 
   public makeNotifyResponse(params: AlipayNotifyArgs): ApiResponse {

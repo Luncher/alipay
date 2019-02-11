@@ -66,7 +66,7 @@ export type AlipayAPIArgs = VerifyPamentArgs
                             | AlipayToaccountTransferArgs
 
 //App支付同步通知参数
-type VerifyPamentResult = string | PaymentResult
+export type VerifyPamentResult = string | PaymentResult
 export interface VerifyPamentArgs {
   memo:   string,                         //描述信息
   result: VerifyPamentResult,             //处理结果(类型为json结构字符串)
@@ -79,7 +79,9 @@ export interface PaymentResult {
   sign_type: AlipaySignType
 }
 
-export interface AlipayTradeAppPayResponse {
+export type AlipayTradeAppPayResponse = AlipayTradeAppPayResponseImpl & AlipayResponseTypeMap
+
+export interface AlipayTradeAppPayResponseImpl {
   code: AlipayNormalResponseCode,
   msg: string,
   app_id: string,
