@@ -142,13 +142,27 @@ export interface AlipayPublicArgs {
 
 export type AlipayResponse = AlipayPublicResponse | AlipayTradeAppPayResponse
 
+export type AlipayResponseType =
+  | 'alipay_trade_query_response'
+  | 'alipay_trade_refund_response'
+  | 'alipay_trade_cancel_response'
+  | 'alipay_trade_precreate_response'
+  | 'alipay_trade_close_response'
+  | 'alipay_trade_create_response'
+  | 'alipay_trade_order_settle_response'
+  | 'alipay_trade_fastpay_refund_query_response'
+  | 'alipay_trade_app_pay_response'
+  | 'alipay_fund_trans_toaccount.transfer_response'
+  | 'alipay_data_dataservice_bill_downloadurl_query_response'
+  | 'async_notify_response'
+
 //支付宝接口公共响应参数
-export interface AlipayPublicResponse {
-  code: ApiResponseCode,
-  msg: string,
-  sub_code?: string,
-  sub_msg?: string,
-  sign: string
+export type AlipayPublicResponse = {
+  code: ApiResponseCode;
+  msg: string;
+  sub_code?: string;
+  sub_msg?: string;
+  sign: string;
 }
 
 //创建订单参数
@@ -187,9 +201,9 @@ export interface AlipayCancelOrderArgs {
 
 //统一收单交易关闭接口
 export interface AlipayTradeCloseArgs {
-  out_trade_no?: string,//订单支付时传入的商户订单号,和支付宝交易号不能同时为空
-  trade_no?: string,    //支付宝交易号，和商户订单号不能同时为空
-  operator_id?: string  //卖家端自定义的的操作员 ID
+  out_trade_no?: string,  //订单支付时传入的商户订单号,和支付宝交易号不能同时为空
+  trade_no?: string,      //支付宝交易号，和商户订单号不能同时为空
+  operator_id?: string    //卖家端自定义的的操作员 ID
 }
 
 //统一收单交易退款接口
@@ -332,11 +346,14 @@ export enum AlipayAPIList {
   'async.notify' = '异步通知' // 自定义
 }
 
+export type GetResponseTypeArgs = AlipayResponse | AlipayVerifySignArgs
+
 export enum AlipayNotifyResult {
   SUCCESS = 'success',
   FAILURE = 'failure'
 }
 
+export type AlipayAlgorithmSignType = 'RSA' | 'RSA2'
 export enum AlipayAlgorithm {
   RSA   = 'RSA-SHA1',
   RSA2  = 'RSA-SHA256'

@@ -109,13 +109,14 @@ export interface AlipayPublicArgs {
     biz_content: string;
 }
 export declare type AlipayResponse = AlipayPublicResponse | AlipayTradeAppPayResponse;
-export interface AlipayPublicResponse {
+export declare type AlipayResponseType = 'alipay_trade_query_response' | 'alipay_trade_refund_response' | 'alipay_trade_cancel_response' | 'alipay_trade_precreate_response' | 'alipay_trade_close_response' | 'alipay_trade_create_response' | 'alipay_trade_order_settle_response' | 'alipay_trade_fastpay_refund_query_response' | 'alipay_trade_app_pay_response' | 'alipay_fund_trans_toaccount.transfer_response' | 'alipay_data_dataservice_bill_downloadurl_query_response' | 'async_notify_response';
+export declare type AlipayPublicResponse = {
     code: ApiResponseCode;
     msg: string;
     sub_code?: string;
     sub_msg?: string;
     sign: string;
-}
+};
 export interface AlipayCreateOrderArgs {
     body?: string;
     subject: string;
@@ -269,10 +270,12 @@ export declare enum AlipayAPIList {
     'alipay.data.dataservice.bill.downloadurl.query' = "\u67E5\u8BE2\u8D26\u5355\u4E0B\u8F7D\u5730\u5740\u63A5\u53E3",
     'async.notify' = "\u5F02\u6B65\u901A\u77E5"
 }
+export declare type GetResponseTypeArgs = AlipayResponse | AlipayVerifySignArgs;
 export declare enum AlipayNotifyResult {
     SUCCESS = "success",
     FAILURE = "failure"
 }
+export declare type AlipayAlgorithmSignType = 'RSA' | 'RSA2';
 export declare enum AlipayAlgorithm {
     RSA = "RSA-SHA1",
     RSA2 = "RSA-SHA256"

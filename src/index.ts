@@ -98,14 +98,14 @@ export default class Alipay {
     return {
       code: response.code,
       message: alipayResponseMessage[response.code],
-      data: response[utils.responseType(response)]
+      data: response[utils.getResponseType(response)]
     }
   }
 
   private makeRequest(params: AlipayPublicArgs, options: urllib.RequestOptions = {}): Promise<ApiResponse> {
     const httpclient: urllib.HttpClient2 = new urllib.HttpClient2()
 
-    return httpclient.request(this.gateWay,  { data: params, dataType: 'json', dataAsQueryString: true, ...options })
+    return httpclient.request(this.gateWay, { data: params, dataType: 'json', dataAsQueryString: true, ...options })
       .then((resp: urllib.HttpClientResponse<AlipayPublicResponse>) => this.makeResponse(resp.data))
   }
 
@@ -141,7 +141,8 @@ export default class Alipay {
     const params = this.validateParams(MethodType.CREATE_PAGE_ORDER, apiParams, publicParams)
     const sign = params.sign
     const signStr = utils.makeSignStr(params)
-    const value = signStr.split('&').reduce((acc, cur) => {
+    const value = signStr.split('&')
+      .reduce((acc, cur) => {
         const [k, v] = cur.split('=')
         return acc + k + '=' + encodeURIComponent(v) + '&'
       }, '').slice(0, -1)
