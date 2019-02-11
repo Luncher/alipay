@@ -149,7 +149,6 @@ export interface AlipayPublicResponse {
   sub_code?: string,
   sub_msg?: string,
   sign: string
-  [key: string]: string
 }
 
 //创建订单参数

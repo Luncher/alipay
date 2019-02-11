@@ -115,7 +115,6 @@ export interface AlipayPublicResponse {
     sub_code?: string;
     sub_msg?: string;
     sign: string;
-    [key: string]: string;
 }
 export interface AlipayCreateOrderArgs {
     body?: string;
