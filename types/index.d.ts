@@ -1,4 +1,4 @@
-import { AlipayOption, GateWay, AlipayTradeSettleArgs, AlipayBillQueryArgs, AlipayPublicArgs, AlipayToaccountTransferArgs, AlipayTradeRefundArgs, AlipayTradeCloseArgs, AlipayQueryOrderArgs, AlipayCancelOrderArgs, AlipayCreateOrderArgs, AlipayTradePrecreateArgs, AlipayTradeRefundQueryArgs, ApiResponse, AlipayNotifyArgs, VerifyPamentArgs } from 'config';
+import { AlipayOption, GateWay, AlipayTradeSettleArgs, AlipayBillQueryArgs, AlipayPublicArgs, AlipayToaccountTransferArgs, AlipayTradeRefundArgs, AlipayTradeCloseArgs, AlipayQueryOrderArgs, AlipayCancelOrderArgs, AlipayCreateOrderArgs, AlipayTradePrecreateArgs, AlipayTradeRefundQueryArgs, ApiResponse, AlipayNotifyArgs, VerifyPamentArgs } from './config';
 export default class Alipay {
     gateWay: GateWay;
     options: AlipayOption;

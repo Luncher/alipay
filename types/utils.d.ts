@@ -1,4 +1,4 @@
-import * as config from 'config';
+import * as config from './config';
 export declare function makeSignStr(params: object, omit?: string[]): string;
 export declare function getSignAlgorithm(signType: config.AlipaySignType): config.AlipayAlgorithm;
 export declare function makeSign(privKey: string, params: config.AlipayPublicArgs): string;

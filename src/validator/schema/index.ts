@@ -15,16 +15,16 @@ export * from './toaccount_transfer'
 
 import * as Joi from 'joi'
 import * as moment from 'moment'
-import { AlipaySignType } from 'config'
+import { AlipaySignType } from 'src/config'
 
 export const basicSchema: Joi.ObjectSchema = Joi.object({
   app_id: Joi.string().max(32).required(),
   method: Joi.string().max(128).required(),
   format: Joi.string().max(40),
   return_url: Joi.string().max(256),
-  charset: Joi.string().max(10).required(),
+  charset: Joi.string().max(10).default('utf-8', '请求使用的编码格式'),
   sign_type: Joi.string().allow(Object.keys(AlipaySignType)),
-  timestamp: Joi.string().max(19).default(() => moment().format('YYYY-MM-DD HH:mm:ss')),
-  version: Joi.string().max(3).required(),
+  timestamp: Joi.string().max(19).default(() => moment().format('YYYY-MM-DD HH:mm:ss'), '时间戳'),
+  version: Joi.string().max(3).default('1.0', '调用的接口版本，固定为：1.0'),
   notify_url: Joi.string().max(256)
 })

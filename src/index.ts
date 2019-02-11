@@ -26,10 +26,10 @@ import {
   VerifyPamentArgs,
   AlipayVerifySignArgs,
   AlipayAPIArgs
-} from 'config'
-import * as utils from 'utils'
+} from './config'
+import * as utils from './utils'
 import { isString } from 'util'
-import * as Validator from 'validator'
+import * as Validator from './validator'
 
 export default class Alipay {
   public gateWay: GateWay
@@ -168,7 +168,7 @@ export default class Alipay {
     return { code: 0, message: alipayResponseMessage[0], data }
   }
 
-  //Compat
+  // Compat
   public createOrder(apiParams: AlipayCreateOrderArgs, publicParams?: AlipayPublicArgs): ApiResponse {
     return this.createAppOrder(apiParams, publicParams)
   }

@@ -1,5 +1,5 @@
 import * as crypto from 'crypto'
-import * as config from 'config'
+import * as config from './config'
 
 export function makeSignStr(params: object, omit = ['sign']) {
   return Object.keys(params)
@@ -20,7 +20,7 @@ export function getSignAlgorithm (signType: config.AlipaySignType): config.Alipa
 export function makeSign (privKey: string, params: config.AlipayPublicArgs) {
   const signStr = makeSignStr(params)
   const algorithm = getSignAlgorithm(params.sign_type)
-  const signer = crypto.createSign(algorithm)
+  const signer = crypto.createSign(algorithm as string)
   signer.update(signStr, <crypto.Utf8AsciiLatin1Encoding>params.charset)
   return signer.sign(privKey, 'base64')
 }

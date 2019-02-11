@@ -122,24 +122,25 @@ export interface AlipayPublicResponseImpl {
     sub_msg?: string;
     sign: string;
 }
+declare type OrderTotalAmount = string | number;
 export interface AlipayCreateOrderArgs {
     body?: string;
     subject: string;
     out_trade_no: string;
+    total_amount: OrderTotalAmount;
     timeout_express?: string;
     time_expire?: string;
-    total_amount: number;
-    auth_token: string;
-    product_code: string;
+    auth_token?: string;
+    product_code?: string;
     goods_type?: GoodsType;
     passback_params?: string;
     promo_params?: string;
     extend_params?: string;
     enable_pay_channels?: string;
     disable_pay_channels?: string;
-    store_id: string;
-    quit_url: string;
-    ext_user_info: string;
+    quit_url?: string;
+    store_id?: string;
+    ext_user_info?: string;
 }
 export interface AlipayQueryOrderArgs {
     out_trade_no?: string;

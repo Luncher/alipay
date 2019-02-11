@@ -1,8 +1,8 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
-    "baseUrl": "./src",
-    "types": ["node"],
+    "baseUrl": "./",
+    "types": ["node", "jest"],
     "lib":["es2015"],
     "module": "commonjs",
     "moduleResolution": "node",
