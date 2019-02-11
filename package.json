@@ -36,7 +36,6 @@
     "@types/joi": "^14.0.1",
     "@types/node": "^10.12.18",
     "@types/urllib": "^2.28.0",
-    "bluebird": "^3.5.0",
     "joi": "^14.3.1",
     "moment": "^2.19.3",
     "urllib": "^2.21.1"
