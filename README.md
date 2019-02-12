@@ -55,11 +55,8 @@ const data = {
   out_trade_no: '1232423',
   total_amount: '100'
 }
-return service.createOrder(data)
-.then(result => {
-  assert(result.code == 0, result.message)
-  assert(result.message == 'success', result.message)
-})
+const result = service.createOrder(data)
+assert(result.code == 0, result.message)
 
 ```
 
@@ -67,16 +64,44 @@ return service.createOrder(data)
 
 >详细参数请参考接口对应的官方文档
 
+### 构造函数支持的参数
+
+```ts
+export interface AlipayOption {
+  appPrivKeyFile:   string      // 应用私钥
+  alipayPubKeyFile: string      // 支付宝公钥
+  appId:            string      // 应用ID
+  notifyUrl?:       string      // 支付宝异步通知URL
+}
+```
+
 ### 接口返回错误码以及错误信息
 
-``` javascript
-{
-  '0': 'success',
-  '1': 'processing',
-  '-1': 'error',
-  '-2': 'permission denied',
-  '-3': 'sign error'
+``` ts
+
+export enum AlipayNormalResponseCode {
+  OK                            = 0,
+  EXCEPTION                     = -1,
+  SIGNATURE_ERROR               = -2,
+  SUCCESS                       = 10000,
+  UNAVALIABLE                   = 20000,
+  INSUFFICIENT_AUTHORIZATION    = 20001,
+  MISSING_REQUIRED_ARGS         = 40001,
+  INVALID_ARGS                  = 40002,
+  PROCESSING_FAILURE            = 40004,
+  PERMISSION_DENIED             = 40006
 }
+
+export enum AlipayPaymentResponseCode {
+  SUCCESS         = '9000',
+  PROCESSING      = '8000',
+  FAILURE         = '4000',
+  REPEAT_REQ      = '5000',
+  USER_CANCEL     = '6001',
+  NETWORK_ERROR   = '6002',
+  UNKNOW          = '6004'
+}
+
 ```
 
 ### 接口返回格式
@@ -88,8 +113,6 @@ return service.createOrder(data)
   data: 蚂蚁金服返回的原始数据//可能为空对象
 }
 ```
-
->为了方便异步处理，所有接口均返回`Promise`
 
 ---
 
@@ -126,12 +149,9 @@ const data = {
   out_trade_no: '1232423',
   total_amount: '100'
 }
-return service.createOrder(data)
-.then(result => {
-  assert(result.code == 0, result.message)
-  assert(result.message == 'success', result.message)
-  //result.data 用于返回给APP,传递给支付宝端发起交易申请
-})
+const result = service.createOrder(data)
+assert(result.code == 0, result.message)
+//result.data 用于返回给APP,传递给支付宝端发起交易申请
 ```
 
 ---
@@ -152,11 +172,8 @@ const data = {
 const basicParams = {
   return_url: 'http://xxx.com'
 }
-return service.createWebOrderURL(data, basicParams)
-.then(result => {
-  assert(result.code == 0, result.message)
-  assert(result.message == 'success', result.message)
-})
+const result = service.createWebOrderURL(data, basicParams)
+assert(result.code == 0, result.message)
 ```
 
 ---
@@ -174,11 +191,8 @@ const data = {
 const basicParams = {
   return_url: 'http://xxx.com'
 }
-return service.createPageOrderURL(data, basicParams)
-.then(result => {
-  assert(result.code == 0, result.message)
-  assert(result.message == 'success', result.message)
-})
+const result = service.createPageOrderURL(data, basicParams)
+assert(result.code == 0, result.message)
 ```
 
 ---
@@ -191,10 +205,7 @@ return service.createPageOrderURL(data, basicParams)
 const outTradeNo = '1232423'
 return service.queryOrder({ out_trade_no: outTradeNo })
 .then(result => {
-  assert(result.code == -1, result.message)
-  assert(result.message == 'error', result.message)
-  assert(result.data.code === '40004')
-  assert(result.data.sub_msg === '交易不存在')
+  assert(result.code == '40004', result.message)
 })
 ```
 
@@ -208,10 +219,7 @@ return service.queryOrder({ out_trade_no: outTradeNo })
 const outTradeNo = 'foobar'
 return service.cancelOrder({ out_trade_no: outTradeNo })
 .then(result => {
-  assert(result.code == -1, result.message)
-  assert(result.message == 'error', result.message)
-  assert(result.data.code === '40004')
-  assert(result.data.sub_msg === '交易不存在')
+  assert(result.code == '40004', result.message)
 })
 ```
 
@@ -247,21 +255,6 @@ const params = {
 return service.makeNotifyResponse(params)
 
 ```
-
-#### 异步通知应答
-
->在接收到蚂蚁金服服务器的订单状态变更通知之后，需要进行应答，有两种(成功、失败)应答类型：
-
-``` javascript
-import AlipayConfig from 'alipay-mobile/config'
-
-console.log(AlipayConfig.ALIPAY_NOTIFY_SUCCESS) // 'success'
-
-console.log(AlipayConfig.ALIPAY_NOTIFY_FAILURE) // 'failure'
-
-```
-
----
 
 ### 交易关闭`tradeClose`
 
