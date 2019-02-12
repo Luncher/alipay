@@ -23,7 +23,7 @@ export const basicSchema: Joi.ObjectSchema = Joi.object({
   format: Joi.string().max(40),
   return_url: Joi.string().max(256),
   charset: Joi.string().max(10).default('utf-8', '请求使用的编码格式'),
-  sign_type: Joi.string().allow(Object.keys(AlipaySignType)),
+  sign_type: Joi.string().allow(Object.keys(AlipaySignType)).default('RSA2', '商户生成签名字符串所使用的签名算法类型，目前支持RSA2和RSA，推荐使用RSA2'),
   timestamp: Joi.string().max(19).default(() => moment().format('YYYY-MM-DD HH:mm:ss'), '时间戳'),
   version: Joi.string().max(3).default('1.0', '调用的接口版本，固定为：1.0'),
   notify_url: Joi.string().max(256)
