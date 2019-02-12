@@ -280,7 +280,7 @@ export interface AlipayToaccountTransferArgs {
   out_biz_no: string, // 商户转账唯一订单号
   payee_type: string, // 收款方账户类型
   payee_account: string, // 收款方账户
-  amount: number, // 转账金额
+  amount: string, // 转账金额
   payer_show_name?: string, // 付款方姓名
   payee_real_name?: string, // 收款方真实姓名
   remark?: string// 转账备注
