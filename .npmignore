@@ -1,6 +1,6 @@
 src/**
-test/**
-boqii-test/**
+tests/**
+coverage/**
 .babelrc
 .eslint*
 debug.js
