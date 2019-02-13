@@ -210,7 +210,7 @@ export interface AlipayToaccountTransferArgs {
     out_biz_no: string;
     payee_type: string;
     payee_account: string;
-    amount: number;
+    amount: string;
     payer_show_name?: string;
     payee_real_name?: string;
     remark?: string;
