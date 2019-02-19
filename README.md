@@ -72,6 +72,7 @@ export interface AlipayOption {
   alipayPubKeyFile: string      // 支付宝公钥
   appId:            string      // 应用ID
   notifyUrl?:       string      // 支付宝异步通知URL
+  gatewayUrl?:      string      // 接口网关地址
 }
 ```
 

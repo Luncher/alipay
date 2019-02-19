@@ -14,6 +14,7 @@ export interface AlipayOption {
   alipayPubKeyFile: string      // 支付宝公钥
   appId:            string      // 应用ID
   notifyUrl?:       string      // 支付宝异步通知URL
+  gatewayUrl?:      string      // 接口网关地址
 }
 
 export enum AlipayNormalResponseCode {
@@ -335,7 +336,8 @@ export enum MethodType {
   NOTIFY_RESPONSE = 'notify.response'
 }
 
-export enum GateWay {
+export type GateWay = string
+export enum GateWayDefault {
   ALIPAY_GETWAY     = 'https://openapi.alipay.com/gateway.do',
   ALIPAY_DEV_GETWAY = 'https://openapi.alipaydev.com/gateway.do'
 }

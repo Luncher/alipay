@@ -4,6 +4,7 @@ import {
   AlipayOption,
   MethodType,
   GateWay,
+  GateWayDefault,
   AlipayResponse,
   AlipayPrivKey,
   AlipayTradeSettleArgs,
@@ -53,7 +54,10 @@ export default class Alipay {
     options.appPrivKeyFile = privKey
     options.alipayPubKeyFile = publicKey
 
-    this.gateWay = isProd() ? GateWay.ALIPAY_GETWAY : GateWay.ALIPAY_DEV_GETWAY
+    this.gateWay = options.gatewayUrl
+    if (!this.gateWay) {
+      this.gateWay = isProd() ? GateWayDefault.ALIPAY_GETWAY : GateWayDefault.ALIPAY_DEV_GETWAY
+    }
 
     return options
   }
