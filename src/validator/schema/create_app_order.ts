@@ -1,5 +1,5 @@
 import * as Joi from 'joi'
-import { GoodsType } from 'src/config'
+import { GoodsType } from '../../config'
 
 export const createAppOrderSchema: Joi.ObjectSchema = Joi.object({
   body: Joi.string().max(128),
