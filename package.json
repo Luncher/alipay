@@ -4,7 +4,7 @@
   "description": "",
   "main": "dist/index.js",
   "scripts": {
-    "compile": "tsc",
+    "compile": "tsc --outDir ./dist",
     "lint": "tslint -p .",
     "test": "jest"
   },
