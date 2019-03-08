@@ -1,5 +1,5 @@
 import * as Joi from 'joi'
-import { AlipayPaymentResponseCode } from 'src/config'
+import { AlipayPaymentResponseCode } from '../../config'
 
 export const verifyPaymentSchema: Joi.ObjectSchema = Joi.object({
   memo: Joi.string().required(),

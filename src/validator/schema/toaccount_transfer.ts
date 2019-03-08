@@ -1,5 +1,5 @@
 import * as Joi from 'joi'
-import { AlipayPayType } from 'src/config'
+import { AlipayPayType } from '../../config'
 
 export const toaccountTransferSchema: Joi.ObjectSchema = Joi.object({
   out_biz_no: Joi.string().required(),
