@@ -12,6 +12,7 @@ export interface AlipayOption {
     alipayPubKeyFile: string;
     appId: string;
     notifyUrl?: string;
+    gatewayUrl?: string;
 }
 export declare enum AlipayNormalResponseCode {
     OK = 0,
@@ -258,7 +259,8 @@ export declare enum MethodType {
     VERIFY_PAYMENT = "verify.payment.status",
     NOTIFY_RESPONSE = "notify.response"
 }
-export declare enum GateWay {
+export declare type GateWay = string;
+export declare enum GateWayDefault {
     ALIPAY_GETWAY = "https://openapi.alipay.com/gateway.do",
     ALIPAY_DEV_GETWAY = "https://openapi.alipaydev.com/gateway.do"
 }
