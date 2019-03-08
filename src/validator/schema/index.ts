@@ -15,7 +15,7 @@ export * from './toaccount_transfer'
 
 import * as Joi from 'joi'
 import * as moment from 'moment'
-import { AlipaySignType } from 'src/config'
+import { AlipaySignType } from '../../config'
 
 export const basicSchema: Joi.ObjectSchema = Joi.object({
   app_id: Joi.string().max(32).required(),

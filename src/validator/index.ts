@@ -1,5 +1,5 @@
 import * as Schema from './schema'
-import { MethodType, AlipayPublicArgs, AlipayAPIArgs } from 'src/config'
+import { MethodType, AlipayPublicArgs, AlipayAPIArgs } from '../config'
 import * as Joi from 'joi';
 
 type AlipayArgs = AlipayPublicArgs | AlipayAPIArgs
