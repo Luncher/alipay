@@ -32,7 +32,7 @@ import * as utils from './utils'
 import { isString } from 'util'
 import * as Validator from './validator'
 
-export default class Alipay {
+export = class Alipay {
   public gateWay: GateWay
   public options: AlipayOption
 
