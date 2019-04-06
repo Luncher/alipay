@@ -125,7 +125,7 @@ export = class Alipay {
   }
 
   public makeNotifyResponse(params: AlipayNotifyArgs): ApiResponse {
-    this.validateAPIParams(MethodType.NOTIFY_RESPONSE, params)
+    // this.validateAPIParams(MethodType.NOTIFY_RESPONSE, params)
     const resp: AlipayVerifySignArgs = { sign: params.sign, async_notify_response: params, sign_type: params.sign_type }
     const valid = utils.verifySign(this.publicKey, resp, ['sign', 'sign_type'], params)
     const code = valid ? AlipayNormalResponseCode.OK : AlipayNormalResponseCode.SIGNATURE_ERROR
