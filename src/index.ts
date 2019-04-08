@@ -78,8 +78,12 @@ export = class Alipay {
     return this.options.notifyUrl
   }
 
-  private validateBasicParams (method: MethodType, publicParams: AlipayPublicArgs): AlipayPublicArgs {
-    const params: AlipayPublicArgs = { ...this.options, ... publicParams, method }
+  private validateBasicParams(method: MethodType, publicParams: AlipayPublicArgs): AlipayPublicArgs {
+    let newOptions = { ...this.options }
+    // remove keys from basic parameters
+    delete newOptions.appPrivKeyFile
+    delete newOptions.alipayPubKeyFile
+    const params: AlipayPublicArgs = { ...newOptions, ...publicParams, method }
 
     return Validator.validateBasicParams(params)
   }
@@ -121,7 +125,7 @@ export = class Alipay {
   }
 
   public makeNotifyResponse(params: AlipayNotifyArgs): ApiResponse {
-    this.validateAPIParams(MethodType.NOTIFY_RESPONSE, params)
+    // this.validateAPIParams(MethodType.NOTIFY_RESPONSE, params)
     const resp: AlipayVerifySignArgs = { sign: params.sign, async_notify_response: params, sign_type: params.sign_type }
     const valid = utils.verifySign(this.publicKey, resp, ['sign', 'sign_type'], params)
     const code = valid ? AlipayNormalResponseCode.OK : AlipayNormalResponseCode.SIGNATURE_ERROR
