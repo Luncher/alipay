@@ -33,6 +33,8 @@ import {
 import * as utils from './utils'
 import * as Validator from './validator'
 
+export * from './utils'
+
 export default class Alipay {
   public gateWay: GateWay
 
