@@ -34,7 +34,7 @@
     "@typescript-eslint/eslint-plugin": "^3.6.1",
     "@typescript-eslint/parser": "^3.8.0",
     "debug": "^2.6.3",
-    "eslint": "^7.6.0",
+    "eslint": "^4.18.2",
     "eslint-config-airbnb-typescript": "^9.0.0",
     "eslint-plugin-import": "^2.22.0",
     "jest": "^24.1.0",
