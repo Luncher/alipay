@@ -3,6 +3,9 @@
   "version": "4.0.0",
   "description": "",
   "main": "dist/index.js",
+  "engines": {
+    "node": ">=12.18"
+  },
   "scripts": {
     "build": "tsc --outDir ./dist",
     "lint": "yarn eslint . --ext .js,.ts",
