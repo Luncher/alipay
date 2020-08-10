@@ -1,23 +1,23 @@
+import * as Joi from 'joi'
 import * as Schema from './schema'
 import { MethodType, AlipayPublicArgs, AlipayAPIArgs } from '../config'
-import * as Joi from 'joi';
 
 type AlipayArgs = AlipayPublicArgs | AlipayAPIArgs
 
-function validate(schema: Joi.ObjectSchema, params: AlipayArgs): AlipayArgs  {
+function validate(schema: Joi.ObjectSchema, params: AlipayArgs): AlipayArgs {
   const result: Joi.ValidationResult<AlipayArgs> = Joi.validate(params, schema)
-  if (!!result.error) {
+  if (result.error) {
     throw result.error
   }
 
   return result.value
 }
 
-export function validateBasicParams (params: AlipayPublicArgs): AlipayPublicArgs  {
+export function validateBasicParams(params: AlipayPublicArgs): AlipayPublicArgs {
   return <AlipayPublicArgs>validate(Schema.basicSchema.options({ allowUnknown: true }), params)
 }
 
-export function validateAPIParams (method: MethodType, params: AlipayAPIArgs): AlipayAPIArgs {
+export function validateAPIParams(method: MethodType, params: AlipayAPIArgs): AlipayAPIArgs {
   switch (method) {
     case MethodType.CREATE_WEB_ORDER: {
       return validate(Schema.createWebOrderSchema, params)

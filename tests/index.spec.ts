@@ -3,9 +3,7 @@ import * as path from 'path'
 import Alipay from '../src/index'
 import { AlipayOption } from '../src/config'
 
-const read = filename => {
-  return fs.readFileSync(path.resolve(__dirname, filename))
-}
+const read = (filename) => fs.readFileSync(path.resolve(__dirname, filename))
 
 function createService(optons?: AlipayOption) {
   const defaultOptions = {
@@ -27,14 +25,14 @@ function testCreateAppOrderOk(options) {
   expect(result.message).toEqual('请求成功')
 }
 
-describe('ALIPAY unit test',  () => {
+describe('ALIPAY unit test', () => {
   it('should use private key with ras header', () => {
     const vOptions = {
       app_id: '2016080100137766',
       appPrivKeyFile: read('./keys/app_priv_key_with_rsa_head.pem'),
       alipayPubKeyFile: read('./keys/alipay_public_key.pem')
     }
-    return testCreateAppOrderOk(vOptions);
+    return testCreateAppOrderOk(vOptions)
   })
 
   it('should use private key with header', () => {
@@ -43,7 +41,7 @@ describe('ALIPAY unit test',  () => {
       appPrivKeyFile: read('./keys/app_priv_key_with_head.pem'),
       alipayPubKeyFile: read('./keys/alipay_public_key.pem')
     }
-    return testCreateAppOrderOk(vOptions);
+    return testCreateAppOrderOk(vOptions)
   })
 
   it('should allow create order', () => {

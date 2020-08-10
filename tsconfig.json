@@ -1,7 +1,7 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
-    "baseUrl": "./",
+    "baseUrl": ".",
     "types": ["node", "jest"],
     "lib":["es2015"],
     "module": "commonjs",
@@ -9,14 +9,13 @@
     "sourceMap":true,
     "removeComments": true,
     "declaration": true,
-    "declarationDir": "./types/",
     "target": "es5",
     "noUnusedLocals":true,
     "noUnusedParameters": true,
     "outDir": "./dist/"
   },
   "include": [
-    "src/**/*"
+    "src/"
   ],
   "exclude": [
     "node_modules",

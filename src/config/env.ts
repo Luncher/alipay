@@ -1,7 +1,7 @@
 enum NodeEnv {
-  TEST        = 'test',
+  TEST = 'test',
   DEVELOPMENT = 'development',
-  PRODUCTION  = 'production'
+  PRODUCTION = 'production'
 }
 
 export function getEnv(): NodeEnv {
