@@ -344,7 +344,7 @@ return service.tradeSettle(params)
 
 ### 单笔转账到支付宝账户接口`toaccountTransfer`
 
-[接口文档](https://docs.open.alipay.com/api_28/alipay.fund.trans.toaccount.transfer/)
+[接口文档](https://opendocs.alipay.com/open/309/alipay.fund.trans.toaccount.transfer)
 
 ```javascript
 const params = {
