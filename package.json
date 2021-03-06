@@ -9,7 +9,7 @@
   "scripts": {
     "build": "tsc --outDir ./dist",
     "lint": "yarn eslint . --ext .js,.ts",
-    "test": "jest"
+    "test": "jest --no-cache"
   },
   "keywords": [
     "alipay",
@@ -29,7 +29,7 @@
     "@types/bluebird": "^3.5.32",
     "@types/jest": "^26.0.20",
     "@types/joi": "^14.3.4",
-    "@types/node": "^14.0.27",
+    "@types/node": "^12.18",
     "@types/urllib": "^2.33.0",
     "@typescript-eslint/eslint-plugin": "^3.6.1",
     "@typescript-eslint/parser": "^3.8.0",
